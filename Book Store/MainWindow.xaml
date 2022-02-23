@@ -8,15 +8,18 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <TabControl x:Name="tabControl">
+        <TabControl x:Name="tabControl" SelectionChanged="tabControl_SelectionChanged">
             <TabItem Header="{x:Static resx:MainWindowStrings.TabItemBooks}">
                 <DataGrid x:Name="dataGridBooks"/>
             </TabItem>
             <TabItem Header="{x:Static resx:MainWindowStrings.TabItemAuthors}">
+                <DataGrid x:Name="dataGridAuthors"/>
             </TabItem>
             <TabItem Header="{x:Static resx:MainWindowStrings.TabItemPublisher}">
+                <DataGrid x:Name="dataGridPublisher"/>
             </TabItem>
             <TabItem Header="{x:Static resx:MainWindowStrings.TabItemGenre}">
+                <DataGrid x:Name="dataGridGenre"/>
             </TabItem>
         </TabControl>
     </Grid>

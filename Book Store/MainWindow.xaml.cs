@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using Microsoft.EntityFrameworkCore;
+
 namespace Book_Store
 {
     /// <summary>
@@ -23,19 +25,35 @@ namespace Book_Store
         public MainWindow()
         {
             InitializeComponent();
+        }
 
-            //var tabItemBooks = new TabItem();
-            //tabItemBooks.
+        private void tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            string header = (tabControl.SelectedItem as TabItem).Header.ToString();
 
-            //var dataGrid = new DataGrid();
-            //dataGrid.Name = "test1";
-
-            //var ti = new TabItem();
-            //ti.Header = "test6";
-            //ti.Content = "qwer";
-
-            //tabControl.Items.Add(ti);
-            //tabControl.Items.Add("test2");
+            using (var db = new BookStoreContext())
+            {
+                if (header == Properties.MainWindowStrings.TabItemBooks)
+                {
+                    db.Books.Load();
+                    dataGridBooks.ItemsSource = db.Books.Local.ToBindingList();
+                }
+                else if (header == Properties.MainWindowStrings.TabItemAuthors)
+                {
+                    db.Authors.Load();
+                    dataGridAuthors.ItemsSource = db.Authors.Local.ToBindingList();
+                }
+                else if (header == Properties.MainWindowStrings.TabItemPublisher)
+                {
+                    db.Publishers.Load();
+                    dataGridPublisher.ItemsSource = db.Publishers.Local.ToBindingList();
+                }
+                else if (header == Properties.MainWindowStrings.TabItemGenre)
+                {
+                    db.Genres.Load();
+                    dataGridGenre.ItemsSource = db.Genres.Local.ToBindingList();
+                }
+            }
         }
     }
 }
