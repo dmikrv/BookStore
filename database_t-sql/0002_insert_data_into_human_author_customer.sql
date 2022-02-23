@@ -7,3 +7,9 @@ VALUES
 INSERT INTO Human (FirstName, LastName, Patronymic)
 VALUES 
 	('Орлов', 'Тимофей', 'Алексеевич');
+
+INSERT INTO Author (HumanId) 
+	VALUES ((SELECT Id FROM Human WHERE FirstName='Joanne' AND LastName='Rowling'));
+
+INSERT INTO Customer (HumanId, Phone) 
+	VALUES ((SELECT Id FROM Human WHERE FirstName='Heather' AND  LastName='Rodriquez'), '380962024774');
