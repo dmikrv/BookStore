@@ -23,6 +23,19 @@ namespace Book_Store
         public MainWindow()
         {
             InitializeComponent();
+
+            //var tabItemBooks = new TabItem();
+            //tabItemBooks.
+
+            //var dataGrid = new DataGrid();
+            //dataGrid.Name = "test1";
+
+            //var ti = new TabItem();
+            //ti.Header = "test6";
+            //ti.Content = "qwer";
+
+            //tabControl.Items.Add(ti);
+            //tabControl.Items.Add("test2");
         }
     }
 }

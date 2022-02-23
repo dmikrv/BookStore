@@ -4,9 +4,20 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Book_Store"
+        xmlns:resx="clr-namespace:Book_Store.Properties"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-
+        <TabControl x:Name="tabControl">
+            <TabItem Header="{x:Static resx:MainWindowStrings.TabItemBooks}">
+                <DataGrid x:Name="dataGridBooks"/>
+            </TabItem>
+            <TabItem Header="{x:Static resx:MainWindowStrings.TabItemAuthors}">
+            </TabItem>
+            <TabItem Header="{x:Static resx:MainWindowStrings.TabItemPublisher}">
+            </TabItem>
+            <TabItem Header="{x:Static resx:MainWindowStrings.TabItemGenre}">
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
