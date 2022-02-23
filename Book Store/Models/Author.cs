@@ -16,5 +16,10 @@ namespace Book_Store.Models
 
         public virtual Human Human { get; set; }
         public virtual ICollection<Book> Books { get; set; }
+
+        public override string ToString()
+        {
+            return Human.ToString();
+        }
     }
 }

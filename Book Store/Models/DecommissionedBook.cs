@@ -10,5 +10,10 @@ namespace Book_Store.Models
         public int BookId { get; set; }
 
         public virtual Book Book { get; set; }
+
+        public override string ToString()
+        {
+            return Book.ToString();
+        }
     }
 }

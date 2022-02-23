@@ -14,5 +14,10 @@ namespace Book_Store.Models
 
         public virtual Author Author { get; set; }
         public virtual Customer Customer { get; set; }
+
+        public override string ToString()
+        {
+            return $"{FirstName} {LastName}";
+        }
     }
 }

@@ -16,5 +16,10 @@ namespace Book_Store.Models
         public string Name { get; set; }
 
         public virtual ICollection<Book> Books { get; set; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

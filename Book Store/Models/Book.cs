@@ -32,5 +32,10 @@ namespace Book_Store.Models
         public virtual ICollection<BookDiscount> BookDiscounts { get; set; }
         public virtual ICollection<ContinuationBook> ContinuationBookPredecessors { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

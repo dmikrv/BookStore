@@ -22,9 +22,14 @@ namespace Book_Store
     /// </summary>
     public partial class MainWindow : Window
     {
+        //DbContextOptions<BookStoreContext> connectionSettings;
+        DbContextOptions connectionSettings = null;
         public MainWindow()
         {
             InitializeComponent();
+
+            var connectionWindow = new ConnectionWindow();
+            connectionWindow.ShowDialog();
         }
 
         private void tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
