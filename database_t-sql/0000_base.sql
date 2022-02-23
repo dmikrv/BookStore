@@ -18,8 +18,8 @@ CREATE TABLE Book (
 	Pages INT NOT NULL,
 	GenreId INT,
 	YearPublishing DATE NOT NULL,
-	CostPrice DECIMAL NOT NULL,
-	Price DECIMAL NOT NULL
+	CostPrice MONEY NOT NULL,
+	Price MONEY NOT NULL
 );
 
 CREATE TABLE Human (
