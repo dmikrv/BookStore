@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,13 +24,22 @@ namespace Book_Store
     public partial class MainWindow : Window
     {
         //DbContextOptions<BookStoreContext> connectionSettings;
-        DbContextOptions connectionSettings = null;
+        //DbContextOptions connectionSettings = null;
         public MainWindow()
         {
             InitializeComponent();
 
-            var connectionWindow = new ConnectionWindow();
-            connectionWindow.ShowDialog();
+            LogEntryList.ItemsSource = LogEntryLoggerProvider.LogEntites;
+
+            //logEntries.Add(new LogEntry
+            //{
+            //    Timestamp = "35456",
+            //    Level = "TEST",
+            //    Message = "Hello, codingScars!"
+            //});
+
+            //var connectionWindow = new ConnectionWindow();
+            //connectionWindow.ShowDialog();
         }
 
         private void tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -126,6 +126,18 @@
   <data name="TabItemGenre" xml:space="preserve">
     <value>Genres</value>
   </data>
+  <data name="TabItemLogs" xml:space="preserve">
+    <value>App Logs</value>
+  </data>
+  <data name="TabItemLogsLevel" xml:space="preserve">
+    <value>Level</value>
+  </data>
+  <data name="TabItemLogsMessage" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="TabItemLogsTimestamp" xml:space="preserve">
+    <value>Timestamp</value>
+  </data>
   <data name="TabItemPublisher" xml:space="preserve">
     <value>Publishers</value>
   </data>

@@ -10,7 +10,8 @@
     <Grid>
         <TabControl x:Name="tabControl" SelectionChanged="tabControl_SelectionChanged">
             <TabItem Header="{x:Static resx:MainWindowStrings.TabItemBooks}">
-                <DataGrid x:Name="dataGridBooks"/>
+                <!--<TabItem Header="{x:Static resx:MainWindowStrings.TabItemBooks}">-->
+                    <DataGrid x:Name="dataGridBooks"/>
             </TabItem>
             <TabItem Header="{x:Static resx:MainWindowStrings.TabItemAuthors}">
                 <DataGrid x:Name="dataGridAuthors"/>
@@ -20,6 +21,19 @@
             </TabItem>
             <TabItem Header="{x:Static resx:MainWindowStrings.TabItemGenre}">
                 <DataGrid x:Name="dataGridGenre"/>
+            </TabItem>
+            <TabItem Header="{x:Static resx:MainWindowStrings.TabItemLogs}">
+                <Grid>
+                    <ListView x:Name="LogEntryList">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="{x:Static resx:MainWindowStrings.TabItemLogsTimestamp}" DisplayMemberBinding="{Binding Timestamp}" Width="120"></GridViewColumn>
+                                <GridViewColumn Header="{x:Static resx:MainWindowStrings.TabItemLogsLevel}" DisplayMemberBinding="{Binding Level}" Width="80"></GridViewColumn>
+                                <GridViewColumn Header="{x:Static resx:MainWindowStrings.TabItemLogsMessage}" DisplayMemberBinding="{Binding Message}" Width="590"></GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
             </TabItem>
         </TabControl>
     </Grid>

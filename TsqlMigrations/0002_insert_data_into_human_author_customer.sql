@@ -6,7 +6,7 @@ VALUES
 
 INSERT INTO Human (FirstName, LastName, Patronymic)
 VALUES 
-	('Орлов', 'Тимофей', 'Алексеевич');
+	('РРІР°РЅ', 'РРІР°РЅРѕРІ', 'РРІР°РЅРѕРІРёС‡');
 
 INSERT INTO Author (HumanId) 
 	VALUES ((SELECT Id FROM Human WHERE FirstName='Joanne' AND LastName='Rowling'));

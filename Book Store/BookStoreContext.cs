@@ -1,6 +1,8 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
 
 using Book_Store.Models;
 
@@ -19,6 +21,8 @@ namespace Book_Store
         {
         }
 
+        public static readonly LoggerFactory MyLoggerFactory = new LoggerFactory(new ILoggerProvider[] { new LogEntryLoggerProvider(), new NLogLoggerProvider() });
+
         public virtual DbSet<Author> Authors { get; set; }
         public virtual DbSet<Book> Books { get; set; }
         public virtual DbSet<BookDiscount> BookDiscounts { get; set; }
@@ -35,8 +39,11 @@ namespace Book_Store
         {
             if (!optionsBuilder.IsConfigured)
             {
+                //NLog.LogManager.LoadConfiguration("NLog.config");
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=BookStore;Trusted_Connection=True;");
+                optionsBuilder
+                    .UseLoggerFactory(MyLoggerFactory) // Warning: Do not create a new ILoggerFactory instance each time
+                    .UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=BookStore;Trusted_Connection=True;");
             }
         }
 
