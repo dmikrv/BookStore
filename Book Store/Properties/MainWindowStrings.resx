@@ -127,7 +127,7 @@
     <value>Genres</value>
   </data>
   <data name="TabItemLogs" xml:space="preserve">
-    <value>App Logs</value>
+    <value>Database Logs</value>
   </data>
   <data name="TabItemLogsLevel" xml:space="preserve">
     <value>Level</value>
@@ -140,5 +140,8 @@
   </data>
   <data name="TabItemPublisher" xml:space="preserve">
     <value>Publishers</value>
+  </data>
+  <data name="WindowTitle" xml:space="preserve">
+    <value>Book Store</value>
   </data>
 </root>

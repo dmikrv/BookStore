@@ -19,10 +19,10 @@ namespace Book_Store.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class ConnectionWindowStrings {
+    public class ConnectionWindowStrings {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace Book_Store.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Book_Store.Properties.ConnectionWindowStrings", typeof(ConnectionWindowStrings).Assembly);
@@ -51,7 +51,7 @@ namespace Book_Store.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace Book_Store.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Connect.
         /// </summary>
-        internal static string ButtonConnect {
+        public static string ButtonConnect {
             get {
                 return ResourceManager.GetString("ButtonConnect", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace Book_Store.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Login:.
         /// </summary>
-        internal static string LabelServerLogin {
+        public static string LabelServerLogin {
             get {
                 return ResourceManager.GetString("LabelServerLogin", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace Book_Store.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Server:.
         /// </summary>
-        internal static string LabelServerName {
+        public static string LabelServerName {
             get {
                 return ResourceManager.GetString("LabelServerName", resourceCulture);
             }
@@ -90,18 +90,45 @@ namespace Book_Store.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Password:.
         /// </summary>
-        internal static string LabelServerPassword {
+        public static string LabelServerPassword {
             get {
                 return ResourceManager.GetString("LabelServerPassword", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to BookStore.
+        /// </summary>
+        public static string ServerDatabaseNameDefault {
+            get {
+                return ResourceManager.GetString("ServerDatabaseNameDefault", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to bookadmin.
+        /// </summary>
+        public static string ServerLoginDafault {
+            get {
+                return ResourceManager.GetString("ServerLoginDafault", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (localdb)\MSSQLLocalDB.
+        /// </summary>
+        public static string ServerNameDafault {
+            get {
+                return ResourceManager.GetString("ServerNameDafault", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Connection.
         /// </summary>
-        internal static string WindowLabel {
+        public static string WindowTitle {
             get {
-                return ResourceManager.GetString("WindowLabel", resourceCulture);
+                return ResourceManager.GetString("WindowTitle", resourceCulture);
             }
         }
     }

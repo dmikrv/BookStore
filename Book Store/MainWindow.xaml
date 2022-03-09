@@ -6,12 +6,11 @@
         xmlns:local="clr-namespace:Book_Store"
         xmlns:resx="clr-namespace:Book_Store.Properties"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="{x:Static resx:MainWindowStrings.WindowTitle}" Height="450" Width="800">
     <Grid>
         <TabControl x:Name="tabControl" SelectionChanged="tabControl_SelectionChanged">
             <TabItem Header="{x:Static resx:MainWindowStrings.TabItemBooks}">
-                <!--<TabItem Header="{x:Static resx:MainWindowStrings.TabItemBooks}">-->
-                    <DataGrid x:Name="dataGridBooks"/>
+                <DataGrid x:Name="dataGridBooks"/>
             </TabItem>
             <TabItem Header="{x:Static resx:MainWindowStrings.TabItemAuthors}">
                 <DataGrid x:Name="dataGridAuthors"/>

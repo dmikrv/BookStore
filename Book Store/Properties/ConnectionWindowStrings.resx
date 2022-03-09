@@ -129,7 +129,16 @@
   <data name="LabelServerPassword" xml:space="preserve">
     <value>Password:</value>
   </data>
-  <data name="WindowLabel" xml:space="preserve">
+  <data name="ServerDatabaseNameDefault" xml:space="preserve">
+    <value>BookStore</value>
+  </data>
+  <data name="ServerLoginDafault" xml:space="preserve">
+    <value>bookadmin</value>
+  </data>
+  <data name="ServerNameDafault" xml:space="preserve">
+    <value>(localdb)\MSSQLLocalDB</value>
+  </data>
+  <data name="WindowTitle" xml:space="preserve">
     <value>Connection</value>
   </data>
 </root>

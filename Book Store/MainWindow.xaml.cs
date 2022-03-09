@@ -24,29 +24,26 @@ namespace Book_Store
     public partial class MainWindow : Window
     {
         //DbContextOptions<BookStoreContext> connectionSettings;
-        //DbContextOptions connectionSettings = null;
+        private readonly string _connectionString;
         public MainWindow()
         {
             InitializeComponent();
-
             LogEntryList.ItemsSource = LogEntryLoggerProvider.LogEntites;
 
-            //logEntries.Add(new LogEntry
-            //{
-            //    Timestamp = "35456",
-            //    Level = "TEST",
-            //    Message = "Hello, codingScars!"
-            //});
+            var connectionWindow = new ConnectionWindow();
+            var result = connectionWindow.ShowDialog();
 
-            //var connectionWindow = new ConnectionWindow();
-            //connectionWindow.ShowDialog();
+            if (result == true)
+                _connectionString = connectionWindow.ConnectionString;
+            else
+                this.Close();
         }
 
         private void tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             string header = (tabControl.SelectedItem as TabItem).Header.ToString();
 
-            using (var db = new BookStoreContext())
+            using (var db = new BookStoreContext(_connectionString))
             {
                 if (header == Properties.MainWindowStrings.TabItemBooks)
                 {

@@ -6,15 +6,15 @@
         xmlns:local="clr-namespace:Book_Store"
         xmlns:resx="clr-namespace:Book_Store.Properties"
         mc:Ignorable="d"
-        Title="{x:Static resx:ConnectionWindowStrings.WindowLabel}" Height="408" Width="292">
-    <Grid Margin="20,0,20,0">
-        <Label Content="Label1" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Center" Margin="0,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="232" Height="25"/>
-        <Label Content="Label2" HorizontalAlignment="Left" Margin="10,64,0,0" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Center" Margin="0,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="232" Height="25"/>
-        <Label Content="Label3" HorizontalAlignment="Left" Margin="10,118,0,0" VerticalAlignment="Top"/>
-        <PasswordBox HorizontalAlignment="Center" Margin="0,144,0,0" VerticalAlignment="Top" Width="232" Height="25"/>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="156,0,0,0" VerticalAlignment="Center" Height="24" Width="86"/>
+        Title="{x:Static resx:ConnectionWindowStrings.WindowTitle}" Height="408" Width="292">
+    <Grid Margin="15,0,15,0">
+        <Label Content="{x:Static resx:ConnectionWindowStrings.LabelServerName}"  HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="serverName" HorizontalAlignment="Center" Margin="0,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="232" Height="25" Text="{x:Static resx:ConnectionWindowStrings.ServerNameDafault}"/>
+        <Label Content="{x:Static resx:ConnectionWindowStrings.LabelServerLogin}" HorizontalAlignment="Left" Margin="10,64,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="serverLogin" HorizontalAlignment="Center" Margin="0,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="232" Height="25" Text="{x:Static resx:ConnectionWindowStrings.ServerLoginDafault}"/>
+        <Label Content="{x:Static resx:ConnectionWindowStrings.LabelServerPassword}" HorizontalAlignment="Left" Margin="10,118,0,0" VerticalAlignment="Top"/>
+        <PasswordBox x:Name="serverPassword" HorizontalAlignment="Center" Margin="0,144,0,0" VerticalAlignment="Top" Width="232" Height="25"/>
+        <Button Content="{x:Static resx:ConnectionWindowStrings.ButtonConnect}" HorizontalAlignment="Left" Margin="156,0,0,0" VerticalAlignment="Center" Height="24" Width="86" Click="Button_Click"/>
 
     </Grid>
 </Window>

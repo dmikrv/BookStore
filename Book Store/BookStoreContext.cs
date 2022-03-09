@@ -12,8 +12,13 @@ namespace Book_Store
 {
     public partial class BookStoreContext : DbContext
     {
-        public BookStoreContext()
+        //public BookStoreContext()
+        //{
+        //}
+
+        public BookStoreContext(string connectionString)
         {
+            _connectionString = connectionString;
         }
 
         public BookStoreContext(DbContextOptions<BookStoreContext> options)
@@ -21,7 +26,9 @@ namespace Book_Store
         {
         }
 
+
         public static readonly LoggerFactory MyLoggerFactory = new LoggerFactory(new ILoggerProvider[] { new LogEntryLoggerProvider(), new NLogLoggerProvider() });
+        private readonly string _connectionString;
 
         public virtual DbSet<Author> Authors { get; set; }
         public virtual DbSet<Book> Books { get; set; }
@@ -39,11 +46,9 @@ namespace Book_Store
         {
             if (!optionsBuilder.IsConfigured)
             {
-                //NLog.LogManager.LoadConfiguration("NLog.config");
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder
                     .UseLoggerFactory(MyLoggerFactory) // Warning: Do not create a new ILoggerFactory instance each time
-                    .UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=BookStore;Trusted_Connection=True;");
+                    .UseSqlServer(_connectionString);
             }
         }
 

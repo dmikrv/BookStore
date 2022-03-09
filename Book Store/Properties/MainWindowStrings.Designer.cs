@@ -88,7 +88,7 @@ namespace Book_Store.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to App Logs.
+        ///   Looks up a localized string similar to Database Logs.
         /// </summary>
         public static string TabItemLogs {
             get {
@@ -129,6 +129,15 @@ namespace Book_Store.Properties {
         public static string TabItemPublisher {
             get {
                 return ResourceManager.GetString("TabItemPublisher", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Book Store.
+        /// </summary>
+        public static string WindowTitle {
+            get {
+                return ResourceManager.GetString("WindowTitle", resourceCulture);
             }
         }
     }

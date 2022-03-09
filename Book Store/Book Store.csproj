@@ -32,7 +32,7 @@
 
   <ItemGroup>
     <EmbeddedResource Update="Properties\ConnectionWindowStrings.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ConnectionWindowStrings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Properties\MainWindowStrings.resx">
