@@ -50,8 +50,8 @@ namespace Book_Store
 
         private void addAuthorButton_Click(object sender, RoutedEventArgs e)
         {
-            var addAuthorWindow = new AddAuthorWindow(_connectionString);
-            addAuthorWindow.ShowDialog();
+            //var addAuthorWindow = new AddAuthorWindow(_connectionString);
+            //addAuthorWindow.ShowDialog();
         }
 
         private void addPublisherButton_Click(object sender, RoutedEventArgs e)

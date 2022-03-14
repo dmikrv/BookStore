@@ -17,6 +17,7 @@ using System.Windows.Shapes;
 using Microsoft.EntityFrameworkCore;
 
 using Book_Store.Models;
+using System.Text.RegularExpressions;
 
 namespace Book_Store
 {
@@ -46,6 +47,10 @@ namespace Book_Store
 
         private void tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // skip bubbling event
+            if (e.Source is not TabControl)
+                return;
+
             string header = (tabControl.SelectedItem as TabItem).Header.ToString();
 
             if (header == Properties.MainWindowStrings.TabItemBooks)
@@ -70,7 +75,9 @@ namespace Book_Store
         {
             using (var db = new BookStoreContext(_connectionString))
             {
-                listViewAuthors.ItemsSource = db.Authors.ToList();
+                listViewAuthors.ItemsSource = (from author in db.Authors
+                                               orderby author.FirstName, author.LastName
+                                               select author).ToList();
             }
 
             firstNameText.Text = string.Empty;
@@ -82,8 +89,30 @@ namespace Book_Store
         {
             using (var db = new BookStoreContext(_connectionString))
             {
-                listViewBooks.ItemsSource = db.Books.Include(nameof(Author)).Include(nameof(Genre)).
-                    Include(nameof(Publisher)).ToList();
+                listViewBooks.ItemsSource = (from book in db.Books.Include(nameof(Author)).Include(nameof(Genre)).Include(nameof(Publisher))
+                                             orderby book.Name
+                                             select book).ToList();
+
+                nameBookText.Text = string.Empty;
+
+                authorComboBox.ItemsSource = db.Authors.ToList();
+                authorComboBox.SelectedIndex = 0;
+
+                publisherCheckBox.IsChecked = false;
+                publisherComboBox.IsEnabled = false;
+                publisherComboBox.ItemsSource = db.Publishers.ToList();
+                publisherComboBox.SelectedIndex = 0;
+
+                pagesBookText.Text = string.Empty;
+
+                genreCheckBox.IsChecked = false;
+                genreComboBox.IsEnabled = false;
+                genreComboBox.ItemsSource = db.Genres.ToList();
+                genreComboBox.SelectedIndex = 0;
+
+                yearPublishingText.Text = string.Empty;
+                costPriceText.Text = string.Empty;
+                priceText.Text = string.Empty;
             }
         }
 
@@ -91,7 +120,9 @@ namespace Book_Store
         {
             using (var db = new BookStoreContext(_connectionString))
             {
-                listViewPublisher.ItemsSource = db.Publishers.ToList();
+                listViewPublisher.ItemsSource = (from publisher in db.Publishers
+                                                 orderby publisher.Name
+                                                 select publisher).ToList();
             }
             publisherNameText.Text = string.Empty;
         }
@@ -100,7 +131,9 @@ namespace Book_Store
         {
             using (var db = new BookStoreContext(_connectionString))
             {
-                listViewGenre.ItemsSource = db.Genres.ToList();
+                listViewGenre.ItemsSource = (from genre in db.Genres
+                                             orderby genre.Name
+                                             select genre).ToList();
             }
             genreNameText.Text = string.Empty;
         }
@@ -110,7 +143,6 @@ namespace Book_Store
 
         private void listViewAuthors_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            e.Handled = true;
             if (listViewAuthors.SelectedIndex == -1)
                 return;
 
@@ -123,16 +155,42 @@ namespace Book_Store
 
         private void listViewBooks_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            e.Handled = true;
             if (listViewBooks.SelectedIndex == -1)
                 return;
 
-            var book = listViewAuthors.SelectedItem as Book;
+            var book = listViewBooks.SelectedItem as Book;
+
+            nameBookText.Text = book.Name;
+            authorComboBox.SelectedItem = book.Author;
+            pagesBookText.Text = book.Pages.ToString();
+            yearPublishingText.Text = book.YearPublishing.Year.ToString();
+            costPriceText.Text = String.Format("{0:0.00}", book.CostPrice);
+            priceText.Text = String.Format("{0:0.00}", book.Price);
+
+            if (book.Publisher is not null)
+            {
+                publisherCheckBox.IsChecked = true;
+                publisherComboBox.SelectedItem = book.Publisher;
+            }
+            else
+            {
+                publisherCheckBox.IsChecked = false;
+            }
+
+            if (book.Genre is not null)
+            {
+                genreCheckBox.IsChecked = true;
+                genreComboBox.SelectedItem = book.Genre;
+            }
+            else
+            {
+                genreCheckBox.IsChecked = false;
+            }
+
         }
 
         private void listViewPublisher_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            e.Handled = true;
             if (listViewPublisher.SelectedIndex == -1)
                 return;
 
@@ -143,7 +201,6 @@ namespace Book_Store
 
         private void listViewGenre_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            e.Handled = true;
             if (listViewGenre.SelectedIndex == -1)
                 return;
 
@@ -160,7 +217,7 @@ namespace Book_Store
         {
             if (firstNameText.Text == string.Empty)
             {
-                MessageBox.Show(Properties.AddAuthorWindowStrings.MsgEmptyFirstName, Properties.MainWindowStrings.WindowTitle,
+                MessageBox.Show("First name is empty!", Properties.MainWindowStrings.WindowTitle,
                     MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
@@ -189,7 +246,7 @@ namespace Book_Store
         {
             if (firstNameText.Text == string.Empty)
             {
-                MessageBox.Show(Properties.AddAuthorWindowStrings.MsgEmptyFirstName, Properties.MainWindowStrings.WindowTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("First name is empty!", Properties.MainWindowStrings.WindowTitle, MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -368,6 +425,148 @@ namespace Book_Store
                     MessageBox.Show(ex.ToString(), Properties.MainWindowStrings.WindowTitle, MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+        }
+
+        private void addBookButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!CheckTextBoxsOfBook())
+                return;
+
+            using (var db = new BookStoreContext(_connectionString))
+            {
+                try
+                {
+                    db.Books.Add(new Book()
+                    {
+                        Name = nameBookText.Text,
+                        AuthorId = (authorComboBox.SelectedItem as Author).Id,
+                        PublisherId = publisherCheckBox.IsChecked == true ? (publisherComboBox.SelectedItem as Publisher).Id : null,
+                        Pages = int.Parse(pagesBookText.Text),
+                        GenreId = genreCheckBox.IsChecked == true ? (genreComboBox.SelectedItem as Genre).Id : null,
+                        YearPublishing = new DateTime(int.Parse(yearPublishingText.Text), 1, 1),
+                        CostPrice = decimal.Parse(costPriceText.Text),
+                        Price = decimal.Parse(priceText.Text),
+                    });
+
+                    db.SaveChanges();
+                    UpdateBooks();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString(), Properties.MainWindowStrings.WindowTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private void changeBookButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!CheckTextBoxsOfBook())
+                return;
+
+            using (var db = new BookStoreContext(_connectionString))
+            {
+                try
+                {
+                    var book = db.Books.First(x => x.Id == (listViewBooks.SelectedItem as Book).Id);
+
+                    book.Name = nameBookText.Text;
+                    book.AuthorId = (authorComboBox.SelectedItem as Author).Id;
+                    book.PublisherId = publisherCheckBox.IsChecked == true ? (publisherComboBox.SelectedItem as Publisher).Id : null;
+                    book.Pages = int.Parse(pagesBookText.Text);
+                    book.GenreId = genreCheckBox.IsChecked == true ? (genreComboBox.SelectedItem as Genre).Id : null;
+                    book.YearPublishing = new DateTime(int.Parse(yearPublishingText.Text), 1, 1);
+                    book.CostPrice = decimal.Parse(costPriceText.Text);
+                    book.Price = decimal.Parse(priceText.Text);
+
+                    db.SaveChanges();
+                    UpdateBooks();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString(), Properties.MainWindowStrings.WindowTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private void deleteBookButton_Click(object sender, RoutedEventArgs e)
+        {
+            using (var db = new BookStoreContext(_connectionString))
+            {
+                try
+                {
+                    db.Books.Remove(listViewBooks.SelectedItem as Book);
+                    db.SaveChanges();
+                    UpdateBooks();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString(), Properties.MainWindowStrings.WindowTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+
+        // ---------------------------------------------------------------------------------------- //
+
+
+        private bool CheckTextBoxsOfBook()
+        {
+            if (nameBookText.Text == string.Empty)
+            {
+                MessageBox.Show("book name is empty!", Properties.MainWindowStrings.WindowTitle,
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+            if (pagesBookText.Text == string.Empty)
+            {
+                MessageBox.Show("pages field is empty!", Properties.MainWindowStrings.WindowTitle,
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+            if (int.Parse(yearPublishingText.Text) < 1 || int.Parse(yearPublishingText.Text) > 9999)
+            {
+                MessageBox.Show("year of publishing is not correct!", Properties.MainWindowStrings.WindowTitle,
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+
+            return true;
+        }
+
+
+        // ---------------------------------------------------------------------------------------- //
+
+
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void FloatValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9.,]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void genreCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            genreComboBox.IsEnabled = true;
+        }
+
+        private void publisherCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            publisherComboBox.IsEnabled = true;
+        }
+
+        private void publisherCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            publisherComboBox.IsEnabled = false;
+        }
+
+        private void genreCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            genreComboBox.IsEnabled = false;
         }
     }
 }

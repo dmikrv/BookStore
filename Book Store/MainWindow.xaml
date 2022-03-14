@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Book_Store"
         xmlns:resx="clr-namespace:Book_Store.Properties"
         mc:Ignorable="d"
-        Title="{x:Static resx:MainWindowStrings.WindowTitle}" Height="450" Width="1000">
+        Title="{x:Static resx:MainWindowStrings.WindowTitle}" Height="550" Width="1000">
     <Grid>
         <TabControl x:Name="tabControl" SelectionChanged="tabControl_SelectionChanged">
             <TabItem Header="{x:Static resx:MainWindowStrings.TabItemBooks}">
@@ -15,7 +15,7 @@
                         <ColumnDefinition Width="4*"/>
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
-                    <ListView x:Name="listViewBooks" SelectionMode="Single">
+                    <ListView x:Name="listViewBooks" SelectionMode="Single" SelectionChanged="listViewBooks_SelectionChanged">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="200"></GridViewColumn>
@@ -30,22 +30,63 @@
                         </ListView.View>
                     </ListView>
                     <StackPanel Grid.Column="1" Margin="5,0,5,0">
-                        <!--<StackPanel Orientation="Vertical">
-                            <Label Content="First name*:"/>
-                            <TextBox x:Name="firstNameText"/>
-                        </StackPanel>
                         <StackPanel Orientation="Vertical">
-                            <Label Content="Last name:"/>
-                            <TextBox x:Name="lastNameText"/>
+                            <Label Content="Name*:"/>
+                            <TextBox x:Name="nameBookText"/>
                         </StackPanel>
-                        <StackPanel Orientation="Vertical">
-                            <Label Content="Patronymic:"/>
-                            <TextBox x:Name="patronymicText"/>
-                        </StackPanel>-->
 
-                        <!--<Button x:Name="addAuthorButton" Content="Add" Click="addAuthorButton_Click" Padding="1,4,1,4" Margin="0,4,0,4"/>
-                        <Button x:Name="changeAuthorButton" Content="Change" Padding="1,4,1,4" Margin="0,0,0,4" Click="changeAuthorButton_Click"/>
-                        <Button x:Name="deleteAuthorButton" Content="Delete" Padding="1,4,1,4" Margin="0,0,0,4" Click="deleteAuthorButton_Click"/>-->
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="Author*:"/>
+                            <ComboBox x:Name="authorComboBox" Grid.Column="1"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="Publisher:"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <CheckBox x:Name="publisherCheckBox" Margin="0,4,0,0" Checked="publisherCheckBox_Checked" Unchecked="publisherCheckBox_Unchecked"/>
+                                <ComboBox x:Name="publisherComboBox" Grid.Column="1"/>
+                            </Grid>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="Pages*:"/>
+                            <TextBox x:Name="pagesBookText" PreviewTextInput="NumberValidationTextBox"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="Genre:"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <CheckBox x:Name="genreCheckBox" Margin="0,4,0,0" Checked="genreCheckBox_Checked" Unchecked="genreCheckBox_Unchecked"/>
+                                <ComboBox x:Name="genreComboBox" Grid.Column="1"/>
+                            </Grid>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="Year publishing*:"/>
+                            <TextBox x:Name="yearPublishingText" PreviewTextInput="NumberValidationTextBox"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="Cost price*:"/>
+                            <TextBox x:Name="costPriceText" PreviewTextInput="FloatValidationTextBox"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="Price*:"/>
+                            <TextBox x:Name="priceText" PreviewTextInput="FloatValidationTextBox"/>
+                        </StackPanel>
+
+                        <Button x:Name="addBookButton" Content="Add" Padding="1,4,1,4" Margin="0,15,0,4" Click="addBookButton_Click"/>
+                        <Button x:Name="changeBookButton" Content="Change" Padding="1,4,1,4" Margin="0,0,0,4" Click="changeBookButton_Click"/>
+                        <Button x:Name="deleteBookButton" Content="Delete" Padding="1,4,1,4" Margin="0,0,0,4" Click="deleteBookButton_Click"/>
                     </StackPanel>
                 </Grid>
             </TabItem>
@@ -78,7 +119,7 @@
                             <TextBox x:Name="patronymicText"/>
                         </StackPanel>
 
-                        <Button x:Name="addAuthorButton" Content="Add" Click="addAuthorButton_Click" Padding="1,4,1,4" Margin="0,4,0,4"/>
+                        <Button x:Name="addAuthorButton" Content="Add" Click="addAuthorButton_Click" Padding="1,4,1,4" Margin="0,15,0,4"/>
                         <Button x:Name="changeAuthorButton" Content="Change" Padding="1,4,1,4" Margin="0,0,0,4" Click="changeAuthorButton_Click"/>
                         <Button x:Name="deleteAuthorButton" Content="Delete" Padding="1,4,1,4" Margin="0,0,0,4" Click="deleteAuthorButton_Click"/>
                     </StackPanel>
@@ -102,7 +143,7 @@
                             <Label Content="Name*:"/>
                             <TextBox x:Name="publisherNameText"/>
                         </StackPanel>
-                        <Button x:Name="addPublisherButton" Content="Add" Padding="1,4,1,4" Margin="0,4,0,4" Click="addPublisherButton_Click"/>
+                        <Button x:Name="addPublisherButton" Content="Add" Padding="1,4,1,4" Margin="0,15,0,4" Click="addPublisherButton_Click"/>
                         <Button x:Name="changePublisherButton" Content="Change" Padding="1,4,1,4" Margin="0,0,0,4" Click="changePublisherButton_Click"/>
                         <Button x:Name="deletePublisherButton" Content="Delete" Padding="1,4,1,4" Margin="0,0,0,4" Click="deletePublisherButton_Click"/>
                     </StackPanel>
@@ -126,7 +167,7 @@
                             <Label Content="Name*:"/>
                             <TextBox x:Name="genreNameText"/>
                         </StackPanel>
-                        <Button x:Name="addGenreButton" Content="Add" Padding="1,4,1,4" Margin="0,4,0,4" Click="addGenreButton_Click"/>
+                        <Button x:Name="addGenreButton" Content="Add" Padding="1,4,1,4" Margin="0,15,0,4" Click="addGenreButton_Click"/>
                         <Button x:Name="changeGenreButton" Content="Change" Padding="1,4,1,4" Margin="0,0,0,4" Click="changeGenreButton_Click"/>
                         <Button x:Name="deleteGenreButton" Content="Delete" Padding="1,4,1,4" Margin="0,0,0,4" Click="deleteGenreButton_Click"/>
                     </StackPanel>

@@ -41,8 +41,8 @@ namespace Book_Store
 
             public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
             {
-                //if (logLevel == LogLevel.Critical || logLevel == LogLevel.Error || logLevel == LogLevel.Warning)
-                RecordMsg(logLevel, eventId, state, exception, formatter);
+                if (logLevel == LogLevel.Critical || logLevel == LogLevel.Error || logLevel == LogLevel.Warning || logLevel == LogLevel.Information)
+                    RecordMsg(logLevel, eventId, state, exception, formatter);
             }
 
             private void RecordMsg<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
@@ -53,14 +53,6 @@ namespace Book_Store
                     Level = logLevel.ToString(),
                     Message = formatter(state, exception)
                 });
-                //_repo.Log(new Log
-                //{
-                //    LogLevel = logLevel.ToString(),
-                //    CategoryName = _categoryName,
-                //    Msg = formatter(state, exception),
-                //    User = "username",
-                //    Timestamp = DateTime.Now
-                //});
             }
 
             public IDisposable BeginScope<TState>(TState state)
@@ -75,6 +67,15 @@ namespace Book_Store
                 }
             }
         }
+
+        public class LogEntry
+        {
+            public string Timestamp { get; set; }
+            public string Level { get; set; }
+            public string Message { get; set; }
+        }
     }
+
+   
 }
 
