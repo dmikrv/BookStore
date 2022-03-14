@@ -11,12 +11,16 @@
         <TabControl x:Name="tabControl" SelectionChanged="tabControl_SelectionChanged">
             <TabItem Header="{x:Static resx:MainWindowStrings.TabItemBooks}">
                 <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
                     <ListView x:Name="listViewBooks" SelectionMode="Single">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="250"></GridViewColumn>
-                                <GridViewColumn Header="Author" DisplayMemberBinding="{Binding Author}" Width="160"></GridViewColumn>
-                                <GridViewColumn Header="Publisher" DisplayMemberBinding="{Binding Publisher}" Width="160"></GridViewColumn>
+                                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="200"></GridViewColumn>
+                                <GridViewColumn Header="Author" DisplayMemberBinding="{Binding Author}" Width="130"></GridViewColumn>
+                                <GridViewColumn Header="Publisher" DisplayMemberBinding="{Binding Publisher}" Width="140"></GridViewColumn>
                                 <GridViewColumn Header="Pages" DisplayMemberBinding="{Binding Pages}" Width="40"></GridViewColumn>
                                 <GridViewColumn Header="Genre" DisplayMemberBinding="{Binding Genre}" Width="90"></GridViewColumn>
                                 <GridViewColumn Header="Year" DisplayMemberBinding="{Binding YearPublishing, StringFormat=yyyy}" Width="40"></GridViewColumn>
@@ -25,6 +29,24 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
+                    <StackPanel Grid.Column="1" Margin="5,0,5,0">
+                        <!--<StackPanel Orientation="Vertical">
+                            <Label Content="First name*:"/>
+                            <TextBox x:Name="firstNameText"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="Last name:"/>
+                            <TextBox x:Name="lastNameText"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="Patronymic:"/>
+                            <TextBox x:Name="patronymicText"/>
+                        </StackPanel>-->
+
+                        <!--<Button x:Name="addAuthorButton" Content="Add" Click="addAuthorButton_Click" Padding="1,4,1,4" Margin="0,4,0,4"/>
+                        <Button x:Name="changeAuthorButton" Content="Change" Padding="1,4,1,4" Margin="0,0,0,4" Click="changeAuthorButton_Click"/>
+                        <Button x:Name="deleteAuthorButton" Content="Delete" Padding="1,4,1,4" Margin="0,0,0,4" Click="deleteAuthorButton_Click"/>-->
+                    </StackPanel>
                 </Grid>
             </TabItem>
             <TabItem Header="{x:Static resx:MainWindowStrings.TabItemAuthors}">
@@ -59,17 +81,56 @@
                         <Button x:Name="addAuthorButton" Content="Add" Click="addAuthorButton_Click" Padding="1,4,1,4" Margin="0,4,0,4"/>
                         <Button x:Name="changeAuthorButton" Content="Change" Padding="1,4,1,4" Margin="0,0,0,4" Click="changeAuthorButton_Click"/>
                         <Button x:Name="deleteAuthorButton" Content="Delete" Padding="1,4,1,4" Margin="0,0,0,4" Click="deleteAuthorButton_Click"/>
-
-
-                        <!--<Button x:Name="addAuthorButton" Content="Add author" Margin="5,15,0,0" Padding="10,4,10,4" HorizontalAlignment="Right" Click="addAuthorButton_Click"></Button>-->
                     </StackPanel>
                 </Grid>
             </TabItem>
             <TabItem Header="{x:Static resx:MainWindowStrings.TabItemPublisher}">
-                <DataGrid x:Name="dataGridPublisher"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <ListView x:Name="listViewPublisher" SelectionMode="Single" SelectionChanged="listViewPublisher_SelectionChanged">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="400"></GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <StackPanel Grid.Column="1" Margin="5,0,5,0">
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="Name*:"/>
+                            <TextBox x:Name="publisherNameText"/>
+                        </StackPanel>
+                        <Button x:Name="addPublisherButton" Content="Add" Padding="1,4,1,4" Margin="0,4,0,4" Click="addPublisherButton_Click"/>
+                        <Button x:Name="changePublisherButton" Content="Change" Padding="1,4,1,4" Margin="0,0,0,4" Click="changePublisherButton_Click"/>
+                        <Button x:Name="deletePublisherButton" Content="Delete" Padding="1,4,1,4" Margin="0,0,0,4" Click="deletePublisherButton_Click"/>
+                    </StackPanel>
+                </Grid>
             </TabItem>
             <TabItem Header="{x:Static resx:MainWindowStrings.TabItemGenre}">
-                <DataGrid x:Name="dataGridGenre"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <ListView x:Name="listViewGenre" SelectionMode="Single" SelectionChanged="listViewGenre_SelectionChanged">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="400"></GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <StackPanel Grid.Column="1" Margin="5,0,5,0">
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="Name*:"/>
+                            <TextBox x:Name="genreNameText"/>
+                        </StackPanel>
+                        <Button x:Name="addGenreButton" Content="Add" Padding="1,4,1,4" Margin="0,4,0,4" Click="addGenreButton_Click"/>
+                        <Button x:Name="changeGenreButton" Content="Change" Padding="1,4,1,4" Margin="0,0,0,4" Click="changeGenreButton_Click"/>
+                        <Button x:Name="deleteGenreButton" Content="Delete" Padding="1,4,1,4" Margin="0,0,0,4" Click="deleteGenreButton_Click"/>
+                    </StackPanel>
+                </Grid>
             </TabItem>
             <TabItem Header="{x:Static resx:MainWindowStrings.TabItemLogs}">
                 <Grid>
