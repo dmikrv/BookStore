@@ -8,14 +8,10 @@
         mc:Ignorable="d"
         Title="{x:Static resx:MainWindowStrings.WindowTitle}" Height="450" Width="1000">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="409*"/>
-            <RowDefinition Height="25"/>
-        </Grid.RowDefinitions>
         <TabControl x:Name="tabControl" SelectionChanged="tabControl_SelectionChanged">
             <TabItem Header="{x:Static resx:MainWindowStrings.TabItemBooks}">
                 <Grid>
-                    <ListView x:Name="listViewBooks">
+                    <ListView x:Name="listViewBooks" SelectionMode="Single">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="250"></GridViewColumn>
@@ -30,10 +26,44 @@
                         </ListView.View>
                     </ListView>
                 </Grid>
-                <!--<DataGrid x:Name="dataGridBooks"/>-->
             </TabItem>
             <TabItem Header="{x:Static resx:MainWindowStrings.TabItemAuthors}">
-                <DataGrid x:Name="dataGridAuthors"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <ListView x:Name="listViewAuthors" SelectionChanged="listViewAuthors_SelectionChanged" SelectionMode="Single">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="First Name" DisplayMemberBinding="{Binding FirstName}" Width="200"></GridViewColumn>
+                                <GridViewColumn Header="Last Name" DisplayMemberBinding="{Binding LastName}" Width="200"></GridViewColumn>
+                                <GridViewColumn Header="Patronymic" DisplayMemberBinding="{Binding Patronymic}" Width="200"></GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <StackPanel Grid.Column="1" Margin="5,0,5,0">
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="First name*:"/>
+                            <TextBox x:Name="firstNameText"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="Last name:"/>
+                            <TextBox x:Name="lastNameText"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="Patronymic:"/>
+                            <TextBox x:Name="patronymicText"/>
+                        </StackPanel>
+
+                        <Button x:Name="addAuthorButton" Content="Add" Click="addAuthorButton_Click" Padding="1,4,1,4" Margin="0,4,0,4"/>
+                        <Button x:Name="changeAuthorButton" Content="Change" Padding="1,4,1,4" Margin="0,0,0,4" Click="changeAuthorButton_Click"/>
+                        <Button x:Name="deleteAuthorButton" Content="Delete" Padding="1,4,1,4" Margin="0,0,0,4" Click="deleteAuthorButton_Click"/>
+
+
+                        <!--<Button x:Name="addAuthorButton" Content="Add author" Margin="5,15,0,0" Padding="10,4,10,4" HorizontalAlignment="Right" Click="addAuthorButton_Click"></Button>-->
+                    </StackPanel>
+                </Grid>
             </TabItem>
             <TabItem Header="{x:Static resx:MainWindowStrings.TabItemPublisher}">
                 <DataGrid x:Name="dataGridPublisher"/>
@@ -55,8 +85,5 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <DockPanel Grid.Row="1">
-            <Button x:Name="addBookButton" Content="{x:Static resx:MainWindowStrings.ButtonAddBook}" Click="addBookButton_Click"/>
-        </DockPanel>
     </Grid>
 </Window>

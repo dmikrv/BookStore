@@ -16,12 +16,14 @@ using System.Windows.Shapes;
 
 using Microsoft.EntityFrameworkCore;
 
+using Book_Store.Models;
+
 namespace Book_Store
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow: Window
+    public partial class MainWindow : Window
     {
         private readonly string _connectionString;
         public MainWindow()
@@ -29,57 +31,166 @@ namespace Book_Store
             InitializeComponent();
             LogEntryList.ItemsSource = LogEntryLoggerProvider.LogEntites;
 
-            var connectionWindow = new ConnectionWindow();
-            var result = connectionWindow.ShowDialog();
+            //var connectionWindow = new ConnectionWindow();
+            //var result = connectionWindow.ShowDialog();
 
-            if (result == true)
-                _connectionString = connectionWindow.ConnectionString;
-            else
-                this.Close();
+            //if (result == true)
+            //    _connectionString = connectionWindow.ConnectionString;
+            //else
+            //    this.Close();
+
+            // for develop
+            _connectionString = $@"Server=(localdb)\MSSQLLocalDB;Database={Properties.ConnectionWindowStrings.ServerDatabaseNameDefault};"
+                + $@"User id=bookadmin;Password=bookadmin";
         }
 
         private void tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             string header = (tabControl.SelectedItem as TabItem).Header.ToString();
 
+            if (header == Properties.MainWindowStrings.TabItemBooks)
+            {
+                UpdateBooks();
+            }
+            else if (header == Properties.MainWindowStrings.TabItemAuthors)
+            {
+                UpdateAuthors();
+            }
+            else if (header == Properties.MainWindowStrings.TabItemPublisher)
+            {
+                //db.Publishers.Load();
+                //dataGridPublisher.ItemsSource = db.Publishers.Local.ToBindingList();
+            }
+            else if (header == Properties.MainWindowStrings.TabItemGenre)
+            {
+                //db.Genres.Load();
+                //dataGridGenre.ItemsSource = db.Genres.Local.ToBindingList();
+            }
+
+        }
+        private void UpdateAuthors()
+        {
             using (var db = new BookStoreContext(_connectionString))
             {
-                if (header == Properties.MainWindowStrings.TabItemBooks)
-                {
-                    //try
-                    //{
-                        listViewBooks.ItemsSource = db.Books.Include(nameof(Models.Author)).Include(nameof(Models.Genre)).
-                            Include(nameof(Models.Publisher)).ToList();
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    MessageBox.Show(ex.Message);
-                    //}
+                listViewAuthors.ItemsSource = db.Authors.ToList();
+            }
 
-                    //Include(nameof(Models.ContinuationBook)).
-                }
-                else if (header == Properties.MainWindowStrings.TabItemAuthors)
+            firstNameText.Text = string.Empty;
+            lastNameText.Text = string.Empty;
+            patronymicText.Text = string.Empty;
+        }
+
+        private void UpdateBooks()
+        {
+            using (var db = new BookStoreContext(_connectionString))
+            {
+                listViewBooks.ItemsSource = db.Books.Include(nameof(Author)).Include(nameof(Genre)).
+                    Include(nameof(Publisher)).ToList();
+            }
+        }
+
+        private void addAuthorButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (firstNameText.Text == string.Empty)
+            {
+                MessageBox.Show(Properties.AddAuthorWindowStrings.MsgEmptyFirstName, Properties.MainWindowStrings.WindowTitle, 
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            using (var db = new BookStoreContext(_connectionString))
+            {
+                db.Authors.Add(new Author()
                 {
-                    db.Authors.Load();
-                    dataGridAuthors.ItemsSource = db.Authors.Local.ToBindingList();
-                }
-                else if (header == Properties.MainWindowStrings.TabItemPublisher)
+                    FirstName = firstNameText.Text != string.Empty ? firstNameText.Text : null,
+                    LastName = lastNameText.Text != string.Empty ? lastNameText.Text : null,
+                    Patronymic = patronymicText.Text != string.Empty ? patronymicText.Text : null,
+                });
+
+                try
                 {
-                    db.Publishers.Load();
-                    dataGridPublisher.ItemsSource = db.Publishers.Local.ToBindingList();
+                    db.SaveChanges();
+                    firstNameText.Text = string.Empty;
+                    lastNameText.Text = string.Empty;
+                    patronymicText.Text = string.Empty;
+                    UpdateAuthors();
                 }
-                else if (header == Properties.MainWindowStrings.TabItemGenre)
+                catch (Exception ex)
                 {
-                    db.Genres.Load();
-                    dataGridGenre.ItemsSource = db.Genres.Local.ToBindingList();
+                    MessageBox.Show(ex.ToString(), Properties.MainWindowStrings.WindowTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+        private void changeAuthorButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (firstNameText.Text == string.Empty)
+            {
+                MessageBox.Show(Properties.AddAuthorWindowStrings.MsgEmptyFirstName, Properties.MainWindowStrings.WindowTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            using (var db = new BookStoreContext(_connectionString))
+            {
+                try
+                {
+                    var author = db.Authors.First(a => a.Id == (listViewAuthors.SelectedItem as Author).Id);
+                    author.FirstName = firstNameText.Text != string.Empty ? firstNameText.Text : null;
+                    author.LastName = lastNameText.Text != string.Empty ? lastNameText.Text : null;
+                    author.Patronymic = patronymicText.Text != string.Empty ? patronymicText.Text : null;
+
+                    db.SaveChanges();
+                    firstNameText.Text = string.Empty;
+                    lastNameText.Text = string.Empty;
+                    patronymicText.Text = string.Empty;
+                    UpdateAuthors();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString(), Properties.MainWindowStrings.WindowTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+        private void deleteAuthorButton_Click(object sender, RoutedEventArgs e)
+        {
+            using (var db = new BookStoreContext(_connectionString))
+            {
+                try
+                {
+                    db.Authors.Remove(listViewAuthors.SelectedItem as Author);
+                    db.SaveChanges();
+                    firstNameText.Text = string.Empty;
+                    lastNameText.Text = string.Empty;
+                    patronymicText.Text = string.Empty;
+                    UpdateAuthors();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString(), Properties.MainWindowStrings.WindowTitle, MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
 
-        private void addBookButton_Click(object sender, RoutedEventArgs e)
+        private void listViewAuthors_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var addBookWindow = new AddBookWindow(_connectionString);
-            addBookWindow.ShowDialog();
+            e.Handled = true;
+            if (listViewAuthors.SelectedIndex == -1)
+                return;
+
+            var author = listViewAuthors.SelectedItem as Author;
+
+            firstNameText.Text = author.FirstName;
+            lastNameText.Text = author.LastName ?? string.Empty;
+            patronymicText.Text = author.Patronymic ?? string.Empty;
         }
+
+        private void listViewBooks_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            e.Handled = true;
+            if (listViewBooks.SelectedIndex == -1)
+                return;
+
+            var book = listViewAuthors.SelectedItem as Book;
+        }
+
     }
 }
