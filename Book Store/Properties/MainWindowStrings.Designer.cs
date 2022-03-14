@@ -61,6 +61,15 @@ namespace Book_Store.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add book.
+        /// </summary>
+        public static string ButtonAddBook {
+            get {
+                return ResourceManager.GetString("ButtonAddBook", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Authors.
         /// </summary>
         public static string TabItemAuthors {

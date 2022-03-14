@@ -22,14 +22,14 @@ namespace Book_Store.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class ConnectionWindowStrings {
+    public class AddBookWindowStrings {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal ConnectionWindowStrings() {
+        internal AddBookWindowStrings() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Book_Store.Properties {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Book_Store.Properties.ConnectionWindowStrings", typeof(ConnectionWindowStrings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Book_Store.Properties.AddBookWindowStrings", typeof(AddBookWindowStrings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,88 +61,88 @@ namespace Book_Store.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Connect.
+        ///   Looks up a localized string similar to Add book.
         /// </summary>
-        public static string ButtonConnect {
+        public static string ButtonAddBook {
             get {
-                return ResourceManager.GetString("ButtonConnect", resourceCulture);
+                return ResourceManager.GetString("ButtonAddBook", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Login:.
+        ///   Looks up a localized string similar to Author*:.
         /// </summary>
-        public static string LabelServerLogin {
+        public static string LabelAuthor {
             get {
-                return ResourceManager.GetString("LabelServerLogin", resourceCulture);
+                return ResourceManager.GetString("LabelAuthor", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Server:.
+        ///   Looks up a localized string similar to Cost price*:.
         /// </summary>
-        public static string LabelServerName {
+        public static string LabelCostPrice {
             get {
-                return ResourceManager.GetString("LabelServerName", resourceCulture);
+                return ResourceManager.GetString("LabelCostPrice", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Password:.
+        ///   Looks up a localized string similar to Genre:.
         /// </summary>
-        public static string LabelServerPassword {
+        public static string LabelGenre {
             get {
-                return ResourceManager.GetString("LabelServerPassword", resourceCulture);
+                return ResourceManager.GetString("LabelGenre", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Succeeded in connecting to the database!.
+        ///   Looks up a localized string similar to Name*:.
         /// </summary>
-        public static string MsgConnectedDb {
+        public static string LabelName {
             get {
-                return ResourceManager.GetString("MsgConnectedDb", resourceCulture);
+                return ResourceManager.GetString("LabelName", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to connect to the database!.
+        ///   Looks up a localized string similar to Pages*:.
         /// </summary>
-        public static string MsgNoConnectedDb {
+        public static string LabelPages {
             get {
-                return ResourceManager.GetString("MsgNoConnectedDb", resourceCulture);
+                return ResourceManager.GetString("LabelPages", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to BookStore.
+        ///   Looks up a localized string similar to Price*:.
         /// </summary>
-        public static string ServerDatabaseNameDefault {
+        public static string LabelPrice {
             get {
-                return ResourceManager.GetString("ServerDatabaseNameDefault", resourceCulture);
+                return ResourceManager.GetString("LabelPrice", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to bookadmin.
+        ///   Looks up a localized string similar to Publisher:.
         /// </summary>
-        public static string ServerLoginDafault {
+        public static string LabelPublisher {
             get {
-                return ResourceManager.GetString("ServerLoginDafault", resourceCulture);
+                return ResourceManager.GetString("LabelPublisher", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to (localdb)\MSSQLLocalDB.
+        ///   Looks up a localized string similar to Year publishing*:.
         /// </summary>
-        public static string ServerNameDafault {
+        public static string LabelYearPublishing {
             get {
-                return ResourceManager.GetString("ServerNameDafault", resourceCulture);
+                return ResourceManager.GetString("LabelYearPublishing", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Connection.
+        ///   Looks up a localized string similar to Add book.
         /// </summary>
         public static string WindowTitle {
             get {

@@ -1,0 +1,76 @@
+﻿<Window x:Class="Book_Store.AddBookWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Book_Store"
+        xmlns:resx="clr-namespace:Book_Store.Properties"
+        mc:Ignorable="d"
+        Title="{x:Static resx:AddBookWindowStrings.WindowTitle}" Height="490" Width="300">
+
+    <StackPanel Margin="10,5,10,5">
+        <StackPanel Orientation="Vertical">
+            <Label Content="{x:Static resx:AddBookWindowStrings.LabelName}"/>
+            <TextBox x:Name="nameBookText" Margin="5,0,0,0"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Vertical">
+            <Label Content="{x:Static resx:AddBookWindowStrings.LabelAuthor}"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="15*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <ComboBox x:Name="authorComboBox" Margin="5,0,5,0"/>
+                <Button x:Name="addAuthorButton" Grid.Column="1" Content="+" Click="addAuthorButton_Click"/>
+            </Grid>
+        </StackPanel>
+
+        <StackPanel Orientation="Vertical">
+            <Label Content="{x:Static resx:AddBookWindowStrings.LabelPublisher}"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="15*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <ComboBox x:Name="publisherComboBox" Margin="5,0,5,0"/>
+                <Button x:Name="addPublisherButton" Grid.Column="1" Content="+" Click="addPublisherButton_Click"/>
+            </Grid>
+        </StackPanel>
+
+        <StackPanel Orientation="Vertical">
+            <Label Content="{x:Static resx:AddBookWindowStrings.LabelPages}"/>
+            <TextBox x:Name="pagesText" Margin="5,0,0,0" PreviewTextInput="NumberValidationTextBox"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Vertical">
+            <Label Content="{x:Static resx:AddBookWindowStrings.LabelGenre}"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="15*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <ComboBox x:Name="genreComboBox" Margin="5,0,5,0"/>
+                <Button x:Name="addGenreButton" Grid.Column="1" Content="+" Click="addGenreButton_Click"/>
+            </Grid>
+        </StackPanel>
+
+        <StackPanel Orientation="Vertical">
+            <Label Content="{x:Static resx:AddBookWindowStrings.LabelYearPublishing}"/>
+            <DatePicker x:Name="yearPublishingDatePicker" Margin="5,0,0,0"></DatePicker>
+        </StackPanel>
+
+        <StackPanel Orientation="Vertical">
+            <Label Content="{x:Static resx:AddBookWindowStrings.LabelCostPrice}"/>
+            <TextBox x:Name="costPriceText" Margin="5,0,0,0" PreviewTextInput="FloatValidationTextBox"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Vertical">
+            <Label Content="{x:Static resx:AddBookWindowStrings.LabelPrice}"/>
+            <TextBox x:Name="priceText" Margin="5,0,0,0" PreviewTextInput="FloatValidationTextBox"/>
+        </StackPanel>
+
+        <Button x:Name="addBookButton" Content="{x:Static resx:AddBookWindowStrings.ButtonAddBook}" Margin="5,15,0,0" Padding="10,4,10,4" HorizontalAlignment="Right" Click="addBookButton_Click"></Button>
+
+    </StackPanel>
+</Window>

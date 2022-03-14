@@ -117,34 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ButtonConnect" xml:space="preserve">
-    <value>Connect</value>
+  <data name="ButtonAddBook" xml:space="preserve">
+    <value>Add book</value>
   </data>
-  <data name="LabelServerLogin" xml:space="preserve">
-    <value>Login:</value>
+  <data name="LabelAuthor" xml:space="preserve">
+    <value>Author*:</value>
   </data>
-  <data name="LabelServerName" xml:space="preserve">
-    <value>Server:</value>
+  <data name="LabelCostPrice" xml:space="preserve">
+    <value>Cost price*:</value>
   </data>
-  <data name="LabelServerPassword" xml:space="preserve">
-    <value>Password:</value>
+  <data name="LabelGenre" xml:space="preserve">
+    <value>Genre:</value>
   </data>
-  <data name="MsgConnectedDb" xml:space="preserve">
-    <value>Succeeded in connecting to the database!</value>
+  <data name="LabelName" xml:space="preserve">
+    <value>Name*:</value>
   </data>
-  <data name="MsgNoConnectedDb" xml:space="preserve">
-    <value>Failed to connect to the database!</value>
+  <data name="LabelPages" xml:space="preserve">
+    <value>Pages*:</value>
   </data>
-  <data name="ServerDatabaseNameDefault" xml:space="preserve">
-    <value>BookStore</value>
+  <data name="LabelPrice" xml:space="preserve">
+    <value>Price*:</value>
   </data>
-  <data name="ServerLoginDafault" xml:space="preserve">
-    <value>bookadmin</value>
+  <data name="LabelPublisher" xml:space="preserve">
+    <value>Publisher:</value>
   </data>
-  <data name="ServerNameDafault" xml:space="preserve">
-    <value>(localdb)\MSSQLLocalDB</value>
+  <data name="LabelYearPublishing" xml:space="preserve">
+    <value>Year publishing*:</value>
   </data>
   <data name="WindowTitle" xml:space="preserve">
-    <value>Connection</value>
+    <value>Add book</value>
   </data>
 </root>

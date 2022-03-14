@@ -6,11 +6,31 @@
         xmlns:local="clr-namespace:Book_Store"
         xmlns:resx="clr-namespace:Book_Store.Properties"
         mc:Ignorable="d"
-        Title="{x:Static resx:MainWindowStrings.WindowTitle}" Height="450" Width="800">
+        Title="{x:Static resx:MainWindowStrings.WindowTitle}" Height="450" Width="1000">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="409*"/>
+            <RowDefinition Height="25"/>
+        </Grid.RowDefinitions>
         <TabControl x:Name="tabControl" SelectionChanged="tabControl_SelectionChanged">
             <TabItem Header="{x:Static resx:MainWindowStrings.TabItemBooks}">
-                <DataGrid x:Name="dataGridBooks"/>
+                <Grid>
+                    <ListView x:Name="listViewBooks">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="250"></GridViewColumn>
+                                <GridViewColumn Header="Author" DisplayMemberBinding="{Binding Author}" Width="160"></GridViewColumn>
+                                <GridViewColumn Header="Publisher" DisplayMemberBinding="{Binding Publisher}" Width="160"></GridViewColumn>
+                                <GridViewColumn Header="Pages" DisplayMemberBinding="{Binding Pages}" Width="40"></GridViewColumn>
+                                <GridViewColumn Header="Genre" DisplayMemberBinding="{Binding Genre}" Width="90"></GridViewColumn>
+                                <GridViewColumn Header="Year" DisplayMemberBinding="{Binding YearPublishing, StringFormat=yyyy}" Width="40"></GridViewColumn>
+                                <GridViewColumn Header="Cost price" DisplayMemberBinding="{Binding CostPrice, StringFormat=\{0:0.00\}}" Width="60"></GridViewColumn>
+                                <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Price, StringFormat=\{0:0.00\}}" Width="60"></GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+                <!--<DataGrid x:Name="dataGridBooks"/>-->
             </TabItem>
             <TabItem Header="{x:Static resx:MainWindowStrings.TabItemAuthors}">
                 <DataGrid x:Name="dataGridAuthors"/>
@@ -35,5 +55,8 @@
                 </Grid>
             </TabItem>
         </TabControl>
+        <DockPanel Grid.Row="1">
+            <Button x:Name="addBookButton" Content="{x:Static resx:MainWindowStrings.ButtonAddBook}" Click="addBookButton_Click"/>
+        </DockPanel>
     </Grid>
 </Window>

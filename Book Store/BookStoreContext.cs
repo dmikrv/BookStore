@@ -12,10 +12,6 @@ namespace Book_Store
 {
     public partial class BookStoreContext : DbContext
     {
-        //public BookStoreContext()
-        //{
-        //}
-
         public BookStoreContext(string connectionString)
         {
             _connectionString = connectionString;
@@ -38,7 +34,6 @@ namespace Book_Store
         public virtual DbSet<DecommissionedBook> DecommissionedBooks { get; set; }
         public virtual DbSet<Discount> Discounts { get; set; }
         public virtual DbSet<Genre> Genres { get; set; }
-        public virtual DbSet<Human> Humans { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<Publisher> Publishers { get; set; }
 
@@ -58,17 +53,20 @@ namespace Book_Store
 
             modelBuilder.Entity<Author>(entity =>
             {
-                entity.HasKey(e => e.HumanId)
-                    .HasName("PK__Author__119BA7BC0319B869");
-
                 entity.ToTable("Author");
 
-                entity.Property(e => e.HumanId).ValueGeneratedNever();
+                entity.Property(e => e.FirstName)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.HasOne(d => d.Human)
-                    .WithOne(p => p.Author)
-                    .HasForeignKey<Author>(d => d.HumanId)
-                    .HasConstraintName("Author_HumanId_Human_id");
+                entity.Property(e => e.LastName)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Patronymic)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Book>(entity =>
@@ -89,7 +87,7 @@ namespace Book_Store
                 entity.HasOne(d => d.Author)
                     .WithMany(p => p.Books)
                     .HasForeignKey(d => d.AuthorId)
-                    .HasConstraintName("Book_AuthorId_Author_HumanId");
+                    .HasConstraintName("Book_AuthorId_Author_Id");
 
                 entity.HasOne(d => d.Genre)
                     .WithMany(p => p.Books)
@@ -107,7 +105,7 @@ namespace Book_Store
             modelBuilder.Entity<BookDiscount>(entity =>
             {
                 entity.HasKey(e => new { e.BookId, e.DiscountId })
-                    .HasName("PK__BookDisc__43A334DEE384E0A7");
+                    .HasName("PK__BookDisc__43A334DE8C53E623");
 
                 entity.ToTable("BookDiscount");
 
@@ -125,7 +123,7 @@ namespace Book_Store
             modelBuilder.Entity<ContinuationBook>(entity =>
             {
                 entity.HasKey(e => e.BookId)
-                    .HasName("PK__Continua__3DE0C2075A53D891");
+                    .HasName("PK__Continua__3DE0C2077201045F");
 
                 entity.ToTable("ContinuationBook");
 
@@ -145,28 +143,31 @@ namespace Book_Store
 
             modelBuilder.Entity<Customer>(entity =>
             {
-                entity.HasKey(e => e.HumanId)
-                    .HasName("PK__Customer__119BA7BC064950AE");
-
                 entity.ToTable("Customer");
 
-                entity.Property(e => e.HumanId).ValueGeneratedNever();
+                entity.Property(e => e.FirstName)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LastName)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Patronymic)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Phone)
                     .IsRequired()
                     .HasMaxLength(15)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.Human)
-                    .WithOne(p => p.Customer)
-                    .HasForeignKey<Customer>(d => d.HumanId)
-                    .HasConstraintName("Customer_HumanId_Human_id");
             });
 
             modelBuilder.Entity<DecommissionedBook>(entity =>
             {
                 entity.HasKey(e => e.BookId)
-                    .HasName("PK__Decommis__3DE0C20791B105EC");
+                    .HasName("PK__Decommis__3DE0C207F14DBEBB");
 
                 entity.ToTable("DecommissionedBook");
 
@@ -197,28 +198,10 @@ namespace Book_Store
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<Human>(entity =>
-            {
-                entity.ToTable("Human");
-
-                entity.Property(e => e.FirstName)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.LastName)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Patronymic)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-            });
-
             modelBuilder.Entity<Order>(entity =>
             {
                 entity.HasKey(e => new { e.BookId, e.CustomerId })
-                    .HasName("PK__Order__A7AA244AFD9A4AF1");
+                    .HasName("PK__Order__A7AA244AECCE47CE");
 
                 entity.ToTable("Order");
 
@@ -234,14 +217,14 @@ namespace Book_Store
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.CustomerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Order_CustomerId_Customer_HumanId");
+                    .HasConstraintName("Order_CustomerId_Customer_Id");
             });
 
             modelBuilder.Entity<Publisher>(entity =>
             {
                 entity.ToTable("Publisher");
 
-                entity.HasIndex(e => e.Name, "UQ__Publishe__737584F615164489")
+                entity.HasIndex(e => e.Name, "UQ__Publishe__737584F6AE7398BD")
                     .IsUnique();
 
                 entity.Property(e => e.Name)

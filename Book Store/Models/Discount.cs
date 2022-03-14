@@ -18,10 +18,5 @@ namespace Book_Store.Models
         public double Percent { get; set; }
 
         public virtual ICollection<BookDiscount> BookDiscounts { get; set; }
-
-        public override string ToString()
-        {
-            return $"{StartDate.ToShortDateString()}-{EndDate.ToShortDateString()}-{Percent}";
-        }
     }
 }

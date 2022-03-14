@@ -18,6 +18,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Properties\AddAuthorWindowStrings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AddAuthorWindowStrings.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\AddBookWindowStrings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AddBookWindowStrings.resx</DependentUpon>
+    </Compile>
     <Compile Update="Properties\ConnectionWindowStrings.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -31,6 +41,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Properties\AddAuthorWindowStrings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>AddAuthorWindowStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Properties\AddBookWindowStrings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>AddBookWindowStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Properties\ConnectionWindowStrings.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ConnectionWindowStrings.Designer.cs</LastGenOutput>

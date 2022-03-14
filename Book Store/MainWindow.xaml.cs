@@ -21,9 +21,8 @@ namespace Book_Store
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow: Window
     {
-        //DbContextOptions<BookStoreContext> connectionSettings;
         private readonly string _connectionString;
         public MainWindow()
         {
@@ -47,8 +46,17 @@ namespace Book_Store
             {
                 if (header == Properties.MainWindowStrings.TabItemBooks)
                 {
-                    db.Books.Load();
-                    dataGridBooks.ItemsSource = db.Books.Local.ToBindingList();
+                    //try
+                    //{
+                        listViewBooks.ItemsSource = db.Books.Include(nameof(Models.Author)).Include(nameof(Models.Genre)).
+                            Include(nameof(Models.Publisher)).ToList();
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    MessageBox.Show(ex.Message);
+                    //}
+
+                    //Include(nameof(Models.ContinuationBook)).
                 }
                 else if (header == Properties.MainWindowStrings.TabItemAuthors)
                 {
@@ -66,6 +74,12 @@ namespace Book_Store
                     dataGridGenre.ItemsSource = db.Genres.Local.ToBindingList();
                 }
             }
+        }
+
+        private void addBookButton_Click(object sender, RoutedEventArgs e)
+        {
+            var addBookWindow = new AddBookWindow(_connectionString);
+            addBookWindow.ShowDialog();
         }
     }
 }

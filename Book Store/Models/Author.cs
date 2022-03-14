@@ -12,14 +12,16 @@ namespace Book_Store.Models
             Books = new HashSet<Book>();
         }
 
-        public int HumanId { get; set; }
+        public int Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Patronymic { get; set; }
 
-        public virtual Human Human { get; set; }
         public virtual ICollection<Book> Books { get; set; }
 
         public override string ToString()
         {
-            return Human.ToString();
+            return $"{FirstName}{$" {LastName}" ?? string.Empty}{$" {Patronymic}" ?? string.Empty}";
         }
     }
 }

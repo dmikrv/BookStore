@@ -12,10 +12,5 @@ namespace Book_Store.Models
 
         public virtual Book Book { get; set; }
         public virtual Book Predecessor { get; set; }
-
-        public override string ToString()
-        {
-            return Book.ToString();
-        }
     }
 }

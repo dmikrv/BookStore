@@ -12,15 +12,12 @@ namespace Book_Store.Models
             Orders = new HashSet<Order>();
         }
 
-        public int HumanId { get; set; }
+        public int Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Patronymic { get; set; }
         public string Phone { get; set; }
 
-        public virtual Human Human { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
-
-        public override string ToString()
-        {
-            return Human.ToString();
-        }
     }
 }
