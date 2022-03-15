@@ -86,12 +86,21 @@ namespace Book_Store
         }
 
         private void UpdateBooks()
-        {
+        { 
             using (var db = new BookStoreContext(_connectionString))
             {
-                listViewBooks.ItemsSource = (from book in db.Books.Include(nameof(Author)).Include(nameof(Genre)).Include(nameof(Publisher))
-                                             orderby book.Name
-                                             select book).ToList();
+                IQueryable<Book> books = db.Books.Include(nameof(Author)).Include(nameof(Genre)).Include(nameof(Publisher))
+                    .Select(x => x);
+                if (searchBookText.Text != string.Empty)
+                {
+                    books = books.Where(x => x.Name.Contains(searchBookText.Text));
+                }
+                if (showDecommissionBooksCheckBox.IsChecked == false)
+                {
+                    books = books.Where(x => !db.DecommissionedBooks.Select(x => x.BookId).Contains(x.Id));
+                }
+
+                listViewBooks.ItemsSource = books.OrderBy(x => x.Name).ToList();
 
                 nameBookText.Text = string.Empty;
 
@@ -116,6 +125,8 @@ namespace Book_Store
 
                 previousBookCheckBox.IsChecked = false;
                 previousBookComboBox.ItemsSource = db.Books.ToList();
+
+                decommissionBookButton.IsEnabled = false;
             }
         }
 
@@ -192,8 +203,9 @@ namespace Book_Store
                 genreComboBox.SelectedIndex = -1;
             }
 
-            // continuation books
+            // continuation and decommissioned books
             Book previousBook;
+            bool isDecommissionedBook;
             using (var db = new BookStoreContext(_connectionString))
             {
                 previousBookComboBox.ItemsSource = (from x in db.Books
@@ -207,6 +219,10 @@ namespace Book_Store
                                                where b.BookId == book.Id
                                                select b.PredecessorId).FirstOrDefault()
                                 select x).FirstOrDefault();
+
+                isDecommissionedBook = (from x in db.DecommissionedBooks
+                                        where x.BookId == book.Id
+                                        select x).Count() > 0;
             }
 
             if (previousBook is not null)
@@ -218,6 +234,16 @@ namespace Book_Store
             {
                 previousBookCheckBox.IsChecked = false;
                 previousBookComboBox.SelectedIndex = -1;
+            }
+
+            decommissionBookButton.IsEnabled = true;
+            if (isDecommissionedBook)
+            {
+                decommissionBookButton.Content = "Return";
+            } 
+            else
+            {
+                decommissionBookButton.Content = "Decommission";
             }
         }
 
@@ -315,6 +341,41 @@ namespace Book_Store
                     MessageBox.Show(ex.ToString(), Properties.MainWindowStrings.WindowTitle, MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+        }
+
+        private void decommissionBookButton_Click(object sender, RoutedEventArgs e)
+        {
+            using (var db = new BookStoreContext(_connectionString))
+            {
+                try
+                {
+                    if (decommissionBookButton.Content.ToString() == "Decommission")
+                    {
+                        db.DecommissionedBooks.Add(new DecommissionedBook()
+                        {
+                            BookId = (listViewBooks.SelectedItem as Book).Id
+                        });
+                    }
+                    else if ((decommissionBookButton.Content.ToString() == "Return"))
+                    {
+                        db.DecommissionedBooks.Remove(db.DecommissionedBooks.First(
+                            x => x.BookId == (listViewBooks.SelectedItem as Book).Id
+                            ));
+                    }
+                    
+                    db.SaveChanges();
+                    UpdateBooks();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString(), Properties.MainWindowStrings.WindowTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+        private void updateDbBookButton_Click(object sender, RoutedEventArgs e)
+        {
+            searchBookText.Text = string.Empty;
+            UpdateBooks();
         }
 
         private void addPublisherButton_Click(object sender, RoutedEventArgs e)
@@ -639,7 +700,17 @@ namespace Book_Store
             previousBookComboBox.IsEnabled = false;
         }
 
-        private void updateDbBookButton_Click(object sender, RoutedEventArgs e)
+        private void searchBookText_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            UpdateBooks();
+        }
+
+        private void showDecommissionBooksCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            UpdateBooks();
+        }
+
+        private void showDecommissionBooksCheckBox_Checked(object sender, RoutedEventArgs e)
         {
             UpdateBooks();
         }

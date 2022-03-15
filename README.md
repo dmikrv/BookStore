@@ -1,10 +1,10 @@
 # Book Store
 
-Exam project "Book Store" using .NET5, C#, WPF, MSSQL, EF Core and LINQ
+Exam project "Book Store" using .NET5, C#, WPF, MSSQL, EF Core, Logging and LINQ
+
+## Requirements / Features
 
 **Основная задача проекта**: учитывать текущий ассортимент книг в магазине.
-
-## Features
 
 * [x] Необходимо хранить следующую информацию о книгах: 
     - название книги
