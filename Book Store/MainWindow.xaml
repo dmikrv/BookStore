@@ -99,6 +99,7 @@
                         <Button x:Name="addBookButton" Content="Add" Padding="1,4,1,4" Margin="0,15,0,4" Click="addBookButton_Click"/>
                         <Button x:Name="changeBookButton" Content="Change" Padding="1,4,1,4" Margin="0,0,0,4" Click="changeBookButton_Click"/>
                         <Button x:Name="deleteBookButton" Content="Delete" Padding="1,4,1,4" Margin="0,0,0,4" Click="deleteBookButton_Click"/>
+                        <Button x:Name="updateDbBookButton" Content="Update DB / Clear fields" Padding="1,4,1,4" Margin="0,0,0,4" Click="updateDbBookButton_Click"/>
                     </StackPanel>
                 </Grid>
             </TabItem>

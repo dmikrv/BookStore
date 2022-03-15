@@ -638,5 +638,10 @@ namespace Book_Store
         {
             previousBookComboBox.IsEnabled = false;
         }
+
+        private void updateDbBookButton_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateBooks();
+        }
     }
 }
