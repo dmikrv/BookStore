@@ -101,18 +101,21 @@ namespace Book_Store
                 publisherCheckBox.IsChecked = false;
                 publisherComboBox.IsEnabled = false;
                 publisherComboBox.ItemsSource = db.Publishers.ToList();
-                publisherComboBox.SelectedIndex = 0;
+                publisherComboBox.SelectedIndex = -1;
 
                 pagesBookText.Text = string.Empty;
 
                 genreCheckBox.IsChecked = false;
                 genreComboBox.IsEnabled = false;
                 genreComboBox.ItemsSource = db.Genres.ToList();
-                genreComboBox.SelectedIndex = 0;
+                genreComboBox.SelectedIndex = -1;
 
                 yearPublishingText.Text = string.Empty;
                 costPriceText.Text = string.Empty;
                 priceText.Text = string.Empty;
+
+                previousBookCheckBox.IsChecked = false;
+                previousBookComboBox.ItemsSource = db.Books.ToList();
             }
         }
 
@@ -175,6 +178,7 @@ namespace Book_Store
             else
             {
                 publisherCheckBox.IsChecked = false;
+                publisherComboBox.SelectedIndex = -1;
             }
 
             if (book.Genre is not null)
@@ -185,8 +189,36 @@ namespace Book_Store
             else
             {
                 genreCheckBox.IsChecked = false;
+                genreComboBox.SelectedIndex = -1;
             }
 
+            // continuation books
+            Book previousBook;
+            using (var db = new BookStoreContext(_connectionString))
+            {
+                previousBookComboBox.ItemsSource = (from x in db.Books
+                                                    where x.Id != book.Id && x.Id != (from y in db.ContinuationBooks 
+                                                                                      where book.Id == y.PredecessorId
+                                                                                      select y.BookId).FirstOrDefault()
+                                                    select x).ToList();
+
+                previousBook = (from x in previousBookComboBox.ItemsSource.OfType<Book>()
+                                where x.Id == (from b in db.ContinuationBooks
+                                               where b.BookId == book.Id
+                                               select b.PredecessorId).FirstOrDefault()
+                                select x).FirstOrDefault();
+            }
+
+            if (previousBook is not null)
+            {
+                previousBookCheckBox.IsChecked = true;
+                previousBookComboBox.SelectedItem = previousBook;
+            }
+            else
+            {
+                previousBookCheckBox.IsChecked = false;
+                previousBookComboBox.SelectedIndex = -1;
+            }
         }
 
         private void listViewPublisher_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -436,7 +468,7 @@ namespace Book_Store
             {
                 try
                 {
-                    db.Books.Add(new Book()
+                    var newBook = db.Books.Add(new Book()
                     {
                         Name = nameBookText.Text,
                         AuthorId = (authorComboBox.SelectedItem as Author).Id,
@@ -446,6 +478,12 @@ namespace Book_Store
                         YearPublishing = new DateTime(int.Parse(yearPublishingText.Text), 1, 1),
                         CostPrice = decimal.Parse(costPriceText.Text),
                         Price = decimal.Parse(priceText.Text),
+                    });
+
+                    db.ContinuationBooks.Add(new ContinuationBook()
+                    {
+                        Book = newBook.Entity, 
+                        PredecessorId = (previousBookComboBox.SelectedItem as Book).Id,
                     });
 
                     db.SaveChanges();
@@ -477,6 +515,28 @@ namespace Book_Store
                     book.YearPublishing = new DateTime(int.Parse(yearPublishingText.Text), 1, 1);
                     book.CostPrice = decimal.Parse(costPriceText.Text);
                     book.Price = decimal.Parse(priceText.Text);
+
+                    var continuationBook = (from x in db.ContinuationBooks where book.Id == x.BookId select x).FirstOrDefault();
+                    if (previousBookCheckBox.IsChecked == true)
+                    {
+                        if (continuationBook is not null)
+                        {
+                            continuationBook.PredecessorId = (previousBookComboBox.SelectedItem as Book).Id;
+                        }
+                        else
+                        {
+                            db.ContinuationBooks.Add(new ContinuationBook()
+                            {
+                                Book = book,
+                                PredecessorId = (previousBookComboBox.SelectedItem as Book).Id,
+                            });
+                        }
+                    }
+                    else
+                    {
+                        if (continuationBook is not null)
+                            db.ContinuationBooks.Remove(continuationBook);
+                    }
 
                     db.SaveChanges();
                     UpdateBooks();
@@ -567,6 +627,16 @@ namespace Book_Store
         private void genreCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
             genreComboBox.IsEnabled = false;
+        }
+
+        private void previousBookCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            previousBookComboBox.IsEnabled = true;
+        }
+
+        private void previousBookCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            previousBookComboBox.IsEnabled = false;
         }
     }
 }

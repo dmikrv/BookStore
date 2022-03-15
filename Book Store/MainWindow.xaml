@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Book_Store"
         xmlns:resx="clr-namespace:Book_Store.Properties"
         mc:Ignorable="d"
-        Title="{x:Static resx:MainWindowStrings.WindowTitle}" Height="550" Width="1000">
+        Title="{x:Static resx:MainWindowStrings.WindowTitle}" Height="620" Width="1000">
     <Grid>
         <TabControl x:Name="tabControl" SelectionChanged="tabControl_SelectionChanged">
             <TabItem Header="{x:Static resx:MainWindowStrings.TabItemBooks}">
@@ -82,6 +82,18 @@
                         <StackPanel Orientation="Vertical">
                             <Label Content="Price*:"/>
                             <TextBox x:Name="priceText" PreviewTextInput="FloatValidationTextBox"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="Previous book:"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <CheckBox x:Name="previousBookCheckBox" Margin="0,4,0,0" Checked="previousBookCheckBox_Checked" Unchecked="previousBookCheckBox_Unchecked"/>
+                                <ComboBox x:Name="previousBookComboBox" Grid.Column="1"/>
+                            </Grid>
                         </StackPanel>
 
                         <Button x:Name="addBookButton" Content="Add" Padding="1,4,1,4" Margin="0,15,0,4" Click="addBookButton_Click"/>
