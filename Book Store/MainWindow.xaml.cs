@@ -13,11 +13,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Text.RegularExpressions;
 
 using Microsoft.EntityFrameworkCore;
 
 using Book_Store.Models;
-using System.Text.RegularExpressions;
 
 namespace Book_Store
 {
@@ -69,6 +69,10 @@ namespace Book_Store
             {
                 UpdateGenres();
             }
+            else if (header == "Discounts")
+            {
+                UpdateDiscounts();
+            }
 
         }
         private void UpdateAuthors()
@@ -99,7 +103,6 @@ namespace Book_Store
                 {
                     books = books.Where(x => !db.DecommissionedBooks.Select(x => x.BookId).Contains(x.Id));
                 }
-
                 listViewBooks.ItemsSource = books.OrderBy(x => x.Name).ToList();
 
                 nameBookText.Text = string.Empty;
@@ -126,6 +129,8 @@ namespace Book_Store
                 previousBookCheckBox.IsChecked = false;
                 previousBookComboBox.ItemsSource = db.Books.ToList();
 
+                deleteBookButton.IsEnabled = false;
+                changeBookButton.IsEnabled = false;
                 decommissionBookButton.IsEnabled = false;
             }
         }
@@ -150,6 +155,34 @@ namespace Book_Store
                                              select genre).ToList();
             }
             genreNameText.Text = string.Empty;
+        }
+
+        private void UpdateDiscounts()
+        {
+            using (var db = new BookStoreContext(_connectionString))
+            {
+                listViewDiscountsDiscount.ItemsSource = db.Discounts.OrderBy(x => x.Percent).ToList();
+            }
+            listViewDiscountsBooksIncluded.Items.Clear();
+            UpdateDiscountsBooksNoIncluded();
+
+            discountNameText.Text = string.Empty;
+            discountPercentUpDown.Value = discountPercentUpDown.Minimum;
+            discountStartPicker.SelectedDate = DateTime.Now;
+            discountEndPicker.SelectedDate = DateTime.Now.AddDays(1);
+
+            deleteDiscountButton.IsEnabled = false;
+            changeDiscountButton.IsEnabled = false;
+        }
+
+        private void UpdateDiscountsBooksNoIncluded()
+        {
+            using (var db = new BookStoreContext(_connectionString))
+            {
+                listViewDiscountsBooksNoIncluded.ItemsSource = db.Books.Include(nameof(Author))
+                    .Include(nameof(Genre)).Include(nameof(Publisher))
+                    .Where(x => !listViewDiscountsBooksIncluded.Items.Contains(x)).ToList();
+            }
         }
 
         // ---------------------------------------------------------------------------------------- //
@@ -626,6 +659,41 @@ namespace Book_Store
             }
         }
 
+        private void addDiscountButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!CheckTextBoxsOfDiscount())
+                return;
+            
+            using (var db = new BookStoreContext(_connectionString))
+            {
+                try
+                {
+                    var discount = db.Discounts.Add(new Discount()
+                    {
+                        Percent = discountPercentUpDown.Value.Value,
+                        StartDate = discountStartPicker.SelectedDate.Value,
+                        EndDate = discountEndPicker.SelectedDate.Value,
+                    });
+
+                    foreach(Book item in listViewDiscountsBooksIncluded.Items)
+                    {
+                        db.BookDiscounts.Add(new BookDiscount()
+                        {
+                            Discount = discount.Entity,
+                            BookId = item.Id
+                        });
+                    }
+
+                    db.SaveChanges();
+                    UpdateDiscounts();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString(), Properties.MainWindowStrings.WindowTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
 
         // ---------------------------------------------------------------------------------------- //
 
@@ -650,6 +718,24 @@ namespace Book_Store
                     MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
+
+            return true;
+        }
+
+        private bool CheckTextBoxsOfDiscount()
+        {
+            if (discountNameText.Text == string.Empty)
+            {
+                MessageBox.Show("discount name is empty!", Properties.MainWindowStrings.WindowTitle,
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+            //if ((from x in listViewDiscountsDiscount.ItemsSource.OfType<Discount>() select x.Name).Contains())
+            //{
+            //    MessageBox.Show("name is already exist!", Properties.MainWindowStrings.WindowTitle,
+            //        MessageBoxButton.OK, MessageBoxImage.Error);
+            //    return false;
+            //}
 
             return true;
         }
@@ -714,5 +800,25 @@ namespace Book_Store
         {
             UpdateBooks();
         }
+
+        private void discountBookUpButton_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (Book book in listViewDiscountsBooksNoIncluded.SelectedItems)
+            {
+                listViewDiscountsBooksIncluded.Items.Add(book);
+            }
+
+            UpdateDiscountsBooksNoIncluded();
+        }
+
+        private void discountBookDownButton_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (Book book in listViewDiscountsBooksIncluded.SelectedItems)
+            {
+                listViewDiscountsBooksIncluded.Items.Remove(book);
+            }
+        }
+
+
     }
 }

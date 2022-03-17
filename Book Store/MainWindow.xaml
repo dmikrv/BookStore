@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Book_Store"
         xmlns:resx="clr-namespace:Book_Store.Properties"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         Title="{x:Static resx:MainWindowStrings.WindowTitle}" Height="670" Width="1000">
     <Grid>
@@ -31,6 +32,7 @@
                         <ListView Grid.Row="1" x:Name="listViewBooks" SelectionMode="Single"  SelectionChanged="listViewBooks_SelectionChanged" Margin="0,4,0,0">
                             <ListView.View>
                                 <GridView>
+                                    <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}" Width="40"></GridViewColumn>
                                     <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="200"></GridViewColumn>
                                     <GridViewColumn Header="Author" DisplayMemberBinding="{Binding Author}" Width="130"></GridViewColumn>
                                     <GridViewColumn Header="Publisher" DisplayMemberBinding="{Binding Publisher}" Width="140"></GridViewColumn>
@@ -116,6 +118,82 @@
                         <Button x:Name="deleteBookButton" Content="Delete" Padding="1,4,1,4" Margin="0,0,0,4" Click="deleteBookButton_Click"/>
                         <Button x:Name="decommissionBookButton" Content="Decommission" Padding="1,4,1,4" Margin="0,0,0,4" Click="decommissionBookButton_Click"/>
                         <Button x:Name="updateDbBookButton" Content="Update DB / Clear fields" Padding="1,4,1,4" Margin="0,0,0,4" Click="updateDbBookButton_Click"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Discounts">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <ListView x:Name="listViewDiscountsDiscount" SelectionMode="Single" Margin="0,4,2,0">
+                        <ListView.View>
+                            <GridView>
+                                <!--<GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="150"></GridViewColumn>-->
+                                <GridViewColumn Header="Percent" DisplayMemberBinding="{Binding Percent}" Width="50"></GridViewColumn>
+                                <GridViewColumn Header="Start" DisplayMemberBinding="{Binding StartDate}" Width="100"></GridViewColumn>
+                                <GridViewColumn Header="End" DisplayMemberBinding="{Binding EndDate}" Width="100"></GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <Grid Grid.Column="1" Margin="2,4,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+                        <ListView Grid.Row="0" x:Name="listViewDiscountsBooksIncluded" SelectionMode="Extended">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="200"></GridViewColumn>
+                                    <GridViewColumn Header="Author" DisplayMemberBinding="{Binding Author}" Width="200"></GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        <Grid Grid.Row="1" Margin="0,2,0,2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="discountBookUpButton" Content="↑" FontSize="16" FontWeight="Bold" Margin="0,0,2,0" Click="discountBookUpButton_Click"/>
+                            <Button x:Name="discountBookDownButton" Grid.Column="1" FontSize="16" FontWeight="Bold" Content="↓" Margin="2,0,0,0" Click="discountBookDownButton_Click"/>
+                        </Grid>
+                        <ListView Grid.Row="2" x:Name="listViewDiscountsBooksNoIncluded" SelectionMode="Extended">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="200"></GridViewColumn>
+                                    <GridViewColumn Header="Author" DisplayMemberBinding="{Binding Author}" Width="200"></GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+
+                    <StackPanel Grid.Column="2" Margin="5,0,5,0">
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="Name*:"/>
+                            <TextBox x:Name="discountNameText"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="Percent*:"/>
+                            <xctk:IntegerUpDown Name="discountPercentUpDown" Minimum="1" Maximum="100"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="Start*:"/>
+                            <DatePicker x:Name="discountStartPicker"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="End*:"/>
+                            <DatePicker x:Name="discountEndPicker"/>
+                        </StackPanel>
+
+                        <Button x:Name="addDiscountButton" Content="Add" Padding="1,4,1,4" Margin="0,15,0,4" Click="addDiscountButton_Click"/>
+                        <Button x:Name="changeDiscountButton" Content="Change" Padding="1,4,1,4" Margin="0,0,0,4"/>
+                        <Button x:Name="deleteDiscountButton" Content="Delete" Padding="1,4,1,4" Margin="0,0,0,4"/>
                     </StackPanel>
                 </Grid>
             </TabItem>
