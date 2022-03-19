@@ -41,6 +41,11 @@ namespace Book_Store.Entities.Configurations
                 .HasForeignKey(d => d.PublisherId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("Book_PublisherId_Publisher_id");
+
+            builder.HasOne(d => d.Image)
+                .WithOne(p => p.Book)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("Book_ImageId_Image_id");
         }
     }
 }

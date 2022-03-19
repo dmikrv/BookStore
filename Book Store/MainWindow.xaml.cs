@@ -985,13 +985,15 @@ namespace Book_Store
             {
                 currentAccount = user;
             }
+
+            loginText.Text = string.Empty;
+            passwordText.Password = string.Empty;
         }
 
         private void LogOut()
         {
             currentAccount = new Account { RoleId = (int)RoleType.GUEST };
+            passwordText.Password = string.Empty;
         }
-
-
     }
 }

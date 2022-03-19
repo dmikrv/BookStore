@@ -8,6 +8,8 @@ using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 
+using Book_Store.Extensions;
+
 #nullable disable
 
 namespace Book_Store
@@ -18,7 +20,12 @@ namespace Book_Store
 
         public BookStoreContext()
         {
-            Database.Migrate();
+            // Database.Migrate();
+        }
+
+        public BookStoreContext(DbContextOptions<BookStoreContext> options)
+             : base(options)
+        {
         }
 
         public virtual DbSet<Account> Accounts { get; set; }
@@ -33,6 +40,7 @@ namespace Book_Store
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<Publisher> Publishers { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<Image> Images { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -42,12 +50,14 @@ namespace Book_Store
             {
                 optionsBuilder
                     .UseLoggerFactory(MyLoggerFactory)
-                    .UseSqlServer(configuration.GetConnectionString("Default"));
+                    .UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             modelBuilder.ApplyConfiguration(new AccountEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new AuthorEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new BookEntityTypeConfiguration());
@@ -60,8 +70,9 @@ namespace Book_Store
             modelBuilder.ApplyConfiguration(new OrderEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new PublisherEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new RoleEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new ImageEntityTypeConfiguration());
 
-            //modelBuilder.SeedData();
+            modelBuilder.SeedData();
         }
     }
 }
