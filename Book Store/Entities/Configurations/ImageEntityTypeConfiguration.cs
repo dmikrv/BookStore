@@ -14,6 +14,10 @@ namespace Book_Store.Entities.Configurations
         {
             builder.ToTable("Image");
 
+            builder.Property(e => e.ImageTitle)
+                .HasMaxLength(100)
+                .IsUnicode(true);
+
             builder.Property(e => e.ImageData)
                 .IsRequired();
         }

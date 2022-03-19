@@ -52,6 +52,13 @@ namespace Book_Store.Extensions
                 new Genre { Id = 16, Name = "Humor" },
             };
 
+            var images = new[]
+            {
+                new Image { Id = 1, ImageTitle = "default", ImageData = Properties.DefaultBookCovers.default_book_cover},
+                new Image { Id = 2, ImageData = Properties.DefaultBookCovers.Harry_Potter_and_the_Philosopher_s_Stone_Book_Cover},
+                new Image { Id = 3, ImageData = Properties.DefaultBookCovers.Harry_Potter_and_the_Chamber_of_Secrets},
+            };
+
             var books = new[]
             {
                 new Book
@@ -64,7 +71,8 @@ namespace Book_Store.Extensions
                     GenreId = genres[0].Id,
                     YearPublishing = new DateTime(1997, 1, 1),
                     CostPrice = 30,
-                    Price = 45.50M
+                    Price = 45.50M,
+                    ImageId = images[1].Id,
                 },
                 new Book
                 {
@@ -77,6 +85,7 @@ namespace Book_Store.Extensions
                     YearPublishing = new DateTime(1998, 1, 1),
                     CostPrice = 20,
                     Price = 61.50M,
+                    ImageId = images[2].Id,
                 },
             };
 
@@ -116,6 +125,10 @@ namespace Book_Store.Extensions
             modelBuilder
                 .Entity<Genre>()
                 .HasData(genres);
+
+            modelBuilder
+                .Entity<Image>()
+                .HasData(images);
 
             modelBuilder
                 .Entity<Book>()

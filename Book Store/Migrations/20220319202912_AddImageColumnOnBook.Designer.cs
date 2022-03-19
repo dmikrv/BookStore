@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Book_Store.Migrations
 {
     [DbContext(typeof(BookStoreContext))]
-    [Migration("20220319202130_AddImageColumnOnBook")]
+    [Migration("20220319202912_AddImageColumnOnBook")]
     partial class AddImageColumnOnBook
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -436,6 +436,11 @@ namespace Book_Store.Migrations
                     b.Property<byte[]>("ImageData")
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImageTitle")
+                        .HasMaxLength(100)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 

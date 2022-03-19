@@ -30,6 +30,12 @@ namespace Book_Store
         public MainWindow()
         {
             InitializeComponent();
+
+            using (var db = new BookStoreContext())
+            {
+                db.Database.Migrate();
+            }
+
             LogEntryList.ItemsSource = LogEntryLoggerProvider.LogEntites;
 
             LogOut();
