@@ -19,11 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Properties\ConnectionWindowStrings.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ConnectionWindowStrings.resx</DependentUpon>
-    </Compile>
     <Compile Update="Properties\MainWindowStrings.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -32,10 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Properties\ConnectionWindowStrings.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ConnectionWindowStrings.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Update="Properties\MainWindowStrings.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>MainWindowStrings.Designer.cs</LastGenOutput>
@@ -43,10 +34,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -3,14 +3,12 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace Book_Store.Models
+namespace Book_Store.Entities
 {
-    public partial class ContinuationBook
+    public partial class DecommissionedBook
     {
         public int BookId { get; set; }
-        public int PredecessorId { get; set; }
 
         public virtual Book Book { get; set; }
-        public virtual Book Predecessor { get; set; }
     }
 }

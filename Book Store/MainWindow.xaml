@@ -130,10 +130,10 @@
                     <ListView x:Name="listViewDiscountsDiscount" SelectionMode="Single" Margin="0,4,2,0" SelectionChanged="listViewDiscountsDiscount_SelectionChanged">
                         <ListView.View>
                             <GridView>
-                                <!--<GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="150"></GridViewColumn>-->
+                                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="150"></GridViewColumn>
                                 <GridViewColumn Header="Start" DisplayMemberBinding="{Binding StartDate, StringFormat=dd.MM.yyyy}" Width="100"></GridViewColumn>
                                 <GridViewColumn Header="End" DisplayMemberBinding="{Binding EndDate, StringFormat=dd.MM.yyyy}" Width="100"></GridViewColumn>
-                                <GridViewColumn Header="Percent" DisplayMemberBinding="{Binding Percent}" Width="50"></GridViewColumn>
+                                <GridViewColumn Header="Percent" DisplayMemberBinding="{Binding Percent}" Width="30"></GridViewColumn>
                             </GridView>
                         </ListView.View>
                     </ListView>

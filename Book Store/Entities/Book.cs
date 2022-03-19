@@ -3,14 +3,13 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace Book_Store.Models
+namespace Book_Store.Entities
 {
     public partial class Book
     {
         public Book()
         {
             BookDiscounts = new HashSet<BookDiscount>();
-            ContinuationBookPredecessors = new HashSet<ContinuationBook>();
             Orders = new HashSet<Order>();
         }
 
@@ -27,10 +26,8 @@ namespace Book_Store.Models
         public virtual Author Author { get; set; }
         public virtual Genre Genre { get; set; }
         public virtual Publisher Publisher { get; set; }
-        public virtual ContinuationBook ContinuationBookBook { get; set; }
         public virtual DecommissionedBook DecommissionedBook { get; set; }
         public virtual ICollection<BookDiscount> BookDiscounts { get; set; }
-        public virtual ICollection<ContinuationBook> ContinuationBookPredecessors { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
 
         public override string ToString()

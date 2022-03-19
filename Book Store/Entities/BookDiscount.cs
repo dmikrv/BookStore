@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 #nullable disable
 
-namespace Book_Store.Models
+namespace Book_Store.Entities
 {
     public partial class BookDiscount
     {

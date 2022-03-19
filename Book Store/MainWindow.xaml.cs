@@ -17,7 +17,7 @@ using System.Text.RegularExpressions;
 
 using Microsoft.EntityFrameworkCore;
 
-using Book_Store.Models;
+using Book_Store.Entities;
 
 namespace Book_Store
 {
@@ -26,23 +26,10 @@ namespace Book_Store
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly string _connectionString;
         public MainWindow()
         {
             InitializeComponent();
             LogEntryList.ItemsSource = LogEntryLoggerProvider.LogEntites;
-
-            //var connectionWindow = new ConnectionWindow();
-            //var result = connectionWindow.ShowDialog();
-
-            //if (result == true)
-            //    _connectionString = connectionWindow.ConnectionString;
-            //else
-            //    this.Close();
-
-            // for develop
-            _connectionString = $@"Server=(localdb)\MSSQLLocalDB;Database={Properties.ConnectionWindowStrings.ServerDatabaseNameDefault};"
-                + $@"User id=bookadmin;Password=bookadmin";
         }
 
         private void tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -77,7 +64,7 @@ namespace Book_Store
         }
         private void UpdateAuthors()
         {
-            using (var db = new BookStoreContext(_connectionString))
+            using (var db = new BookStoreContext())
             {
                 listViewAuthors.ItemsSource = (from author in db.Authors
                                                orderby author.FirstName, author.LastName
@@ -91,7 +78,7 @@ namespace Book_Store
 
         private void UpdateBooks()
         {
-            using (var db = new BookStoreContext(_connectionString))
+            using (var db = new BookStoreContext())
             {
                 IQueryable<Book> books = db.Books.Include(nameof(Author)).Include(nameof(Genre)).Include(nameof(Publisher))
                     .Select(x => x);
@@ -137,7 +124,7 @@ namespace Book_Store
 
         private void UpdatePublishers()
         {
-            using (var db = new BookStoreContext(_connectionString))
+            using (var db = new BookStoreContext())
             {
                 listViewPublisher.ItemsSource = (from publisher in db.Publishers
                                                  orderby publisher.Name
@@ -148,7 +135,7 @@ namespace Book_Store
 
         private void UpdateGenres()
         {
-            using (var db = new BookStoreContext(_connectionString))
+            using (var db = new BookStoreContext())
             {
                 listViewGenre.ItemsSource = (from genre in db.Genres
                                              orderby genre.Name
@@ -159,7 +146,7 @@ namespace Book_Store
 
         private void UpdateDiscounts()
         {
-            using (var db = new BookStoreContext(_connectionString))
+            using (var db = new BookStoreContext())
             {
                 listViewDiscountsDiscount.ItemsSource = db.Discounts.OrderBy(x => x.Percent).ToList();
             }
@@ -177,7 +164,7 @@ namespace Book_Store
 
         private void UpdateDiscountsBooksNoIncluded()
         {
-            using (var db = new BookStoreContext(_connectionString))
+            using (var db = new BookStoreContext())
             {
                 listViewDiscountsBooksNoIncluded.ItemsSource = db.Books.Include(nameof(Author))
                     .Include(nameof(Genre)).Include(nameof(Publisher)).AsEnumerable()
@@ -242,18 +229,18 @@ namespace Book_Store
             // continuation and decommissioned books
             Book previousBook;
             bool isDecommissionedBook;
-            using (var db = new BookStoreContext(_connectionString))
+            using (var db = new BookStoreContext())
             {
                 previousBookComboBox.ItemsSource = (from x in db.Books
                                                     where x.Id != book.Id && x.Id != (from y in db.ContinuationBooks
-                                                                                      where book.Id == y.PredecessorId
+                                                                                      where book.Id == y.PredecessorBookId
                                                                                       select y.BookId).FirstOrDefault()
                                                     select x).ToList();
 
                 previousBook = (from x in previousBookComboBox.ItemsSource.OfType<Book>()
                                 where x.Id == (from b in db.ContinuationBooks
                                                where b.BookId == book.Id
-                                               select b.PredecessorId).FirstOrDefault()
+                                               select b.PredecessorBookId).FirstOrDefault()
                                 select x).FirstOrDefault();
 
                 isDecommissionedBook = (from x in db.DecommissionedBooks
@@ -310,6 +297,7 @@ namespace Book_Store
                 return;
 
             var discount = listViewDiscountsDiscount.SelectedItem as Discount;
+            discountNameText.Text = discount.Name;
             discountPercentUpDown.Value = (int)discount.Percent;
             discountStartPicker.SelectedDate = discount.StartDate;
             discountEndPicker.SelectedDate = discount.EndDate;
@@ -319,7 +307,7 @@ namespace Book_Store
 
             listViewDiscountsBooksIncluded.Items.Clear();
 
-            using (var db = new BookStoreContext(_connectionString))
+            using (var db = new BookStoreContext())
             {
                 var includedBooksId = db.BookDiscounts.Where(x => x.DiscountId == discount.Id).Select(y => y.BookId).ToList();
 
@@ -332,7 +320,6 @@ namespace Book_Store
                     listViewDiscountsBooksIncluded.Items.Add(book);
                 }
             }
-
             UpdateDiscountsBooksNoIncluded();
         }
 
@@ -349,7 +336,7 @@ namespace Book_Store
                 return;
             }
 
-            using (var db = new BookStoreContext(_connectionString))
+            using (var db = new BookStoreContext())
             {
                 try
                 {
@@ -377,7 +364,7 @@ namespace Book_Store
                 return;
             }
 
-            using (var db = new BookStoreContext(_connectionString))
+            using (var db = new BookStoreContext())
             {
                 try
                 {
@@ -397,7 +384,7 @@ namespace Book_Store
         }
         private void deleteAuthorButton_Click(object sender, RoutedEventArgs e)
         {
-            using (var db = new BookStoreContext(_connectionString))
+            using (var db = new BookStoreContext())
             {
                 try
                 {
@@ -414,7 +401,7 @@ namespace Book_Store
 
         private void decommissionBookButton_Click(object sender, RoutedEventArgs e)
         {
-            using (var db = new BookStoreContext(_connectionString))
+            using (var db = new BookStoreContext())
             {
                 try
                 {
@@ -456,7 +443,7 @@ namespace Book_Store
                 return;
             }
 
-            using (var db = new BookStoreContext(_connectionString))
+            using (var db = new BookStoreContext())
             {
                 try
                 {
@@ -484,7 +471,7 @@ namespace Book_Store
                 return;
             }
 
-            using (var db = new BookStoreContext(_connectionString))
+            using (var db = new BookStoreContext())
             {
                 try
                 {
@@ -503,7 +490,7 @@ namespace Book_Store
 
         private void deletePublisherButton_Click(object sender, RoutedEventArgs e)
         {
-            using (var db = new BookStoreContext(_connectionString))
+            using (var db = new BookStoreContext())
             {
                 try
                 {
@@ -527,7 +514,7 @@ namespace Book_Store
                 return;
             }
 
-            using (var db = new BookStoreContext(_connectionString))
+            using (var db = new BookStoreContext())
             {
                 try
                 {
@@ -555,7 +542,7 @@ namespace Book_Store
                 return;
             }
 
-            using (var db = new BookStoreContext(_connectionString))
+            using (var db = new BookStoreContext())
             {
                 try
                 {
@@ -574,7 +561,7 @@ namespace Book_Store
 
         private void deleteGenreButton_Click(object sender, RoutedEventArgs e)
         {
-            using (var db = new BookStoreContext(_connectionString))
+            using (var db = new BookStoreContext())
             {
                 try
                 {
@@ -594,7 +581,7 @@ namespace Book_Store
             if (!CheckTextBoxsOfBook())
                 return;
 
-            using (var db = new BookStoreContext(_connectionString))
+            using (var db = new BookStoreContext())
             {
                 try
                 {
@@ -615,7 +602,7 @@ namespace Book_Store
                         db.ContinuationBooks.Add(new ContinuationBook()
                         {
                             Book = newBook.Entity,
-                            PredecessorId = (previousBookComboBox.SelectedItem as Book).Id,
+                            PredecessorBookId = (previousBookComboBox.SelectedItem as Book).Id,
                         });
                     }
 
@@ -634,7 +621,7 @@ namespace Book_Store
             if (!CheckTextBoxsOfBook())
                 return;
 
-            using (var db = new BookStoreContext(_connectionString))
+            using (var db = new BookStoreContext())
             {
                 try
                 {
@@ -654,14 +641,14 @@ namespace Book_Store
                     {
                         if (continuationBook is not null)
                         {
-                            continuationBook.PredecessorId = (previousBookComboBox.SelectedItem as Book).Id;
+                            continuationBook.PredecessorBookId = (previousBookComboBox.SelectedItem as Book).Id;
                         }
                         else
                         {
                             db.ContinuationBooks.Add(new ContinuationBook()
                             {
                                 Book = book,
-                                PredecessorId = (previousBookComboBox.SelectedItem as Book).Id,
+                                PredecessorBookId = (previousBookComboBox.SelectedItem as Book).Id,
                             });
                         }
                     }
@@ -683,7 +670,7 @@ namespace Book_Store
 
         private void deleteBookButton_Click(object sender, RoutedEventArgs e)
         {
-            using (var db = new BookStoreContext(_connectionString))
+            using (var db = new BookStoreContext())
             {
                 try
                 {
@@ -703,12 +690,13 @@ namespace Book_Store
             if (!CheckTextBoxsOfDiscount())
                 return;
 
-            using (var db = new BookStoreContext(_connectionString))
+            using (var db = new BookStoreContext())
             {
                 try
                 {
                     var discount = db.Discounts.Add(new Discount()
                     {
+                        Name = discountNameText.Text,
                         Percent = discountPercentUpDown.Value.Value,
                         StartDate = discountStartPicker.SelectedDate.Value,
                         EndDate = discountEndPicker.SelectedDate.Value,
@@ -735,7 +723,7 @@ namespace Book_Store
 
         private void deleteDiscountButton_Click(object sender, RoutedEventArgs e)
         {
-            using (var db = new BookStoreContext(_connectionString))
+            using (var db = new BookStoreContext())
             {
                 try
                 {
@@ -756,12 +744,13 @@ namespace Book_Store
             if (!CheckTextBoxsOfDiscount())
                 return;
 
-            using (var db = new BookStoreContext(_connectionString))
+            using (var db = new BookStoreContext())
             {
                 var discount = db.Discounts.First(x => x.Id == (listViewDiscountsDiscount.SelectedItem as Discount).Id);
 
                 try
                 {
+                    discount.Name = discountNameText.Text;
                     discount.Percent = discountPercentUpDown.Value.Value;
                     discount.StartDate = discountStartPicker.SelectedDate.Value;
                     discount.EndDate = discountEndPicker.SelectedDate.Value;

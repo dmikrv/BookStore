@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace Book_Store.Models
+namespace Book_Store.Entities
 {
     public partial class Discount
     {
@@ -13,6 +13,7 @@ namespace Book_Store.Models
         }
 
         public int Id { get; set; }
+        public string Name { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public double Percent { get; set; }
