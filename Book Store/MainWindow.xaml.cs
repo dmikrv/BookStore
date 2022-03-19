@@ -90,7 +90,7 @@ namespace Book_Store
         }
 
         private void UpdateBooks()
-        { 
+        {
             using (var db = new BookStoreContext(_connectionString))
             {
                 IQueryable<Book> books = db.Books.Include(nameof(Author)).Include(nameof(Genre)).Include(nameof(Publisher))
@@ -180,8 +180,9 @@ namespace Book_Store
             using (var db = new BookStoreContext(_connectionString))
             {
                 listViewDiscountsBooksNoIncluded.ItemsSource = db.Books.Include(nameof(Author))
-                    .Include(nameof(Genre)).Include(nameof(Publisher))
-                    .Where(x => !listViewDiscountsBooksIncluded.Items.Contains(x)).ToList();
+                    .Include(nameof(Genre)).Include(nameof(Publisher)).AsEnumerable()
+                    .Where(x => !listViewDiscountsBooksIncluded.Items.OfType<Book>().Select(x => x.Id).Contains(x.Id))
+                    .OrderBy(x => x.Name).ToList();
             }
         }
 
@@ -213,6 +214,8 @@ namespace Book_Store
             yearPublishingText.Text = book.YearPublishing.Year.ToString();
             costPriceText.Text = String.Format("{0:0.00}", book.CostPrice);
             priceText.Text = String.Format("{0:0.00}", book.Price);
+            changeBookButton.IsEnabled = true;
+            deleteBookButton.IsEnabled = true;
 
             if (book.Publisher is not null)
             {
@@ -242,7 +245,7 @@ namespace Book_Store
             using (var db = new BookStoreContext(_connectionString))
             {
                 previousBookComboBox.ItemsSource = (from x in db.Books
-                                                    where x.Id != book.Id && x.Id != (from y in db.ContinuationBooks 
+                                                    where x.Id != book.Id && x.Id != (from y in db.ContinuationBooks
                                                                                       where book.Id == y.PredecessorId
                                                                                       select y.BookId).FirstOrDefault()
                                                     select x).ToList();
@@ -273,7 +276,7 @@ namespace Book_Store
             if (isDecommissionedBook)
             {
                 decommissionBookButton.Content = "Return";
-            } 
+            }
             else
             {
                 decommissionBookButton.Content = "Decommission";
@@ -298,6 +301,39 @@ namespace Book_Store
             var genre = listViewGenre.SelectedItem as Genre;
 
             genreNameText.Text = genre.Name;
+        }
+
+
+        private void listViewDiscountsDiscount_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (listViewDiscountsDiscount.SelectedIndex == -1)
+                return;
+
+            var discount = listViewDiscountsDiscount.SelectedItem as Discount;
+            discountPercentUpDown.Value = (int)discount.Percent;
+            discountStartPicker.SelectedDate = discount.StartDate;
+            discountEndPicker.SelectedDate = discount.EndDate;
+
+            changeDiscountButton.IsEnabled = true;
+            deleteDiscountButton.IsEnabled = true;
+
+            listViewDiscountsBooksIncluded.Items.Clear();
+
+            using (var db = new BookStoreContext(_connectionString))
+            {
+                var includedBooksId = db.BookDiscounts.Where(x => x.DiscountId == discount.Id).Select(y => y.BookId).ToList();
+
+                var includedBooks = db.Books.Include(nameof(Author))
+                    .Include(nameof(Genre)).Include(nameof(Publisher)).AsEnumerable()
+                    .Where(x => includedBooksId.Contains(x.Id)).ToList();
+
+                foreach (var book in includedBooks)
+                {
+                    listViewDiscountsBooksIncluded.Items.Add(book);
+                }
+            }
+
+            UpdateDiscountsBooksNoIncluded();
         }
 
 
@@ -395,7 +431,7 @@ namespace Book_Store
                             x => x.BookId == (listViewBooks.SelectedItem as Book).Id
                             ));
                     }
-                    
+
                     db.SaveChanges();
                     UpdateBooks();
                 }
@@ -574,11 +610,14 @@ namespace Book_Store
                         Price = decimal.Parse(priceText.Text),
                     });
 
-                    db.ContinuationBooks.Add(new ContinuationBook()
+                    if (previousBookCheckBox.IsChecked == true)
                     {
-                        Book = newBook.Entity, 
-                        PredecessorId = (previousBookComboBox.SelectedItem as Book).Id,
-                    });
+                        db.ContinuationBooks.Add(new ContinuationBook()
+                        {
+                            Book = newBook.Entity,
+                            PredecessorId = (previousBookComboBox.SelectedItem as Book).Id,
+                        });
+                    }
 
                     db.SaveChanges();
                     UpdateBooks();
@@ -663,7 +702,7 @@ namespace Book_Store
         {
             if (!CheckTextBoxsOfDiscount())
                 return;
-            
+
             using (var db = new BookStoreContext(_connectionString))
             {
                 try
@@ -675,11 +714,65 @@ namespace Book_Store
                         EndDate = discountEndPicker.SelectedDate.Value,
                     });
 
-                    foreach(Book item in listViewDiscountsBooksIncluded.Items)
+                    foreach (Book item in listViewDiscountsBooksIncluded.Items)
                     {
                         db.BookDiscounts.Add(new BookDiscount()
                         {
                             Discount = discount.Entity,
+                            BookId = item.Id
+                        });
+                    }
+
+                    db.SaveChanges();
+                    UpdateDiscounts();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString(), Properties.MainWindowStrings.WindowTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private void deleteDiscountButton_Click(object sender, RoutedEventArgs e)
+        {
+            using (var db = new BookStoreContext(_connectionString))
+            {
+                try
+                {
+                    db.Discounts.Remove(listViewDiscountsDiscount.SelectedItem as Discount);
+
+                    db.SaveChanges();
+                    UpdateDiscounts();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString(), Properties.MainWindowStrings.WindowTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private void changeDiscountButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!CheckTextBoxsOfDiscount())
+                return;
+
+            using (var db = new BookStoreContext(_connectionString))
+            {
+                var discount = db.Discounts.First(x => x.Id == (listViewDiscountsDiscount.SelectedItem as Discount).Id);
+
+                try
+                {
+                    discount.Percent = discountPercentUpDown.Value.Value;
+                    discount.StartDate = discountStartPicker.SelectedDate.Value;
+                    discount.EndDate = discountEndPicker.SelectedDate.Value;
+
+                    db.BookDiscounts.RemoveRange(db.BookDiscounts.Where(x => x.DiscountId == discount.Id));
+
+                    foreach (Book item in listViewDiscountsBooksIncluded.Items)
+                    {
+                        db.BookDiscounts.Add(new BookDiscount()
+                        {
+                            Discount = discount,
                             BookId = item.Id
                         });
                     }
@@ -712,7 +805,20 @@ namespace Book_Store
                     MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
-            if (int.Parse(yearPublishingText.Text) < 1 || int.Parse(yearPublishingText.Text) > 9999)
+            if (costPriceText.Text == string.Empty)
+            {
+                MessageBox.Show("cost price field is empty!", Properties.MainWindowStrings.WindowTitle,
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+            if (priceText.Text == string.Empty)
+            {
+                MessageBox.Show("price field is empty!", Properties.MainWindowStrings.WindowTitle,
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+            if (yearPublishingText.Text == string.Empty || int.Parse(yearPublishingText.Text) < 1 
+                || int.Parse(yearPublishingText.Text) > 9999)
             {
                 MessageBox.Show("year of publishing is not correct!", Properties.MainWindowStrings.WindowTitle,
                     MessageBoxButton.OK, MessageBoxImage.Error);
@@ -730,6 +836,13 @@ namespace Book_Store
                     MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
+            if (discountEndPicker.SelectedDate < discountStartPicker.SelectedDate)
+            {
+                MessageBox.Show("end date < start date!", Properties.MainWindowStrings.WindowTitle,
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+
             //if ((from x in listViewDiscountsDiscount.ItemsSource.OfType<Discount>() select x.Name).Contains())
             //{
             //    MessageBox.Show("name is already exist!", Properties.MainWindowStrings.WindowTitle,
@@ -800,6 +913,10 @@ namespace Book_Store
         {
             UpdateBooks();
         }
+        private void updateDiscountButton_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateDiscounts();
+        }
 
         private void discountBookUpButton_Click(object sender, RoutedEventArgs e)
         {
@@ -807,18 +924,17 @@ namespace Book_Store
             {
                 listViewDiscountsBooksIncluded.Items.Add(book);
             }
-
             UpdateDiscountsBooksNoIncluded();
         }
 
         private void discountBookDownButton_Click(object sender, RoutedEventArgs e)
         {
-            foreach (Book book in listViewDiscountsBooksIncluded.SelectedItems)
+            var oldBooks = listViewDiscountsBooksIncluded.SelectedItems.OfType<Book>().ToList();
+            foreach (Book book in oldBooks)
             {
                 listViewDiscountsBooksIncluded.Items.Remove(book);
             }
+            UpdateDiscountsBooksNoIncluded();
         }
-
-
     }
 }

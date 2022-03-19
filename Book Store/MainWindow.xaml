@@ -32,7 +32,6 @@
                         <ListView Grid.Row="1" x:Name="listViewBooks" SelectionMode="Single"  SelectionChanged="listViewBooks_SelectionChanged" Margin="0,4,0,0">
                             <ListView.View>
                                 <GridView>
-                                    <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}" Width="40"></GridViewColumn>
                                     <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="200"></GridViewColumn>
                                     <GridViewColumn Header="Author" DisplayMemberBinding="{Binding Author}" Width="130"></GridViewColumn>
                                     <GridViewColumn Header="Publisher" DisplayMemberBinding="{Binding Publisher}" Width="140"></GridViewColumn>
@@ -128,13 +127,13 @@
                         <ColumnDefinition Width="4*"/>
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
-                    <ListView x:Name="listViewDiscountsDiscount" SelectionMode="Single" Margin="0,4,2,0">
+                    <ListView x:Name="listViewDiscountsDiscount" SelectionMode="Single" Margin="0,4,2,0" SelectionChanged="listViewDiscountsDiscount_SelectionChanged">
                         <ListView.View>
                             <GridView>
                                 <!--<GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="150"></GridViewColumn>-->
+                                <GridViewColumn Header="Start" DisplayMemberBinding="{Binding StartDate, StringFormat=dd.MM.yyyy}" Width="100"></GridViewColumn>
+                                <GridViewColumn Header="End" DisplayMemberBinding="{Binding EndDate, StringFormat=dd.MM.yyyy}" Width="100"></GridViewColumn>
                                 <GridViewColumn Header="Percent" DisplayMemberBinding="{Binding Percent}" Width="50"></GridViewColumn>
-                                <GridViewColumn Header="Start" DisplayMemberBinding="{Binding StartDate}" Width="100"></GridViewColumn>
-                                <GridViewColumn Header="End" DisplayMemberBinding="{Binding EndDate}" Width="100"></GridViewColumn>
                             </GridView>
                         </ListView.View>
                     </ListView>
@@ -192,8 +191,9 @@
                         </StackPanel>
 
                         <Button x:Name="addDiscountButton" Content="Add" Padding="1,4,1,4" Margin="0,15,0,4" Click="addDiscountButton_Click"/>
-                        <Button x:Name="changeDiscountButton" Content="Change" Padding="1,4,1,4" Margin="0,0,0,4"/>
-                        <Button x:Name="deleteDiscountButton" Content="Delete" Padding="1,4,1,4" Margin="0,0,0,4"/>
+                        <Button x:Name="changeDiscountButton" Content="Change" Padding="1,4,1,4" Margin="0,0,0,4" Click="changeDiscountButton_Click"/>
+                        <Button x:Name="deleteDiscountButton" Content="Delete" Padding="1,4,1,4" Margin="0,0,0,4" Click="deleteDiscountButton_Click"/>
+                        <Button x:Name="updateDiscountButton" Content="Update DB / Clear fields" Padding="1,4,1,4" Margin="0,0,0,4" Click="updateDiscountButton_Click"/>
                     </StackPanel>
                 </Grid>
             </TabItem>
