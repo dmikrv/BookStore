@@ -26,10 +26,16 @@ namespace Book_Store
     /// </summary>
     public partial class MainWindow : Window
     {
+        Account currentAccount;
         public MainWindow()
         {
             InitializeComponent();
             LogEntryList.ItemsSource = LogEntryLoggerProvider.LogEntites;
+
+            LogOut();
+            Authorization();
+
+            loginText.Text = "admin";
         }
 
         private void tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -925,5 +931,67 @@ namespace Book_Store
             }
             UpdateDiscountsBooksNoIncluded();
         }
+
+        private void logInButton_Click(object sender, RoutedEventArgs e)
+        {
+            LogIn();
+            Authorization();
+        }
+
+        private void logOutButton_Click(object sender, RoutedEventArgs e)
+        {
+            LogOut();
+            Authorization();
+        }
+
+        private void Authorization()
+        {
+            foreach(TabItem item in tabControl.Items)
+            {
+                item.Visibility = Visibility.Collapsed;
+            }
+
+            switch ((RoleType)currentAccount.RoleId)
+            {
+                case RoleType.ADMIN:
+                    tabItemBooks.Visibility = Visibility.Visible;
+                    tabItemDiscounts.Visibility = Visibility.Visible;
+                    tabItemAuthors.Visibility = Visibility.Visible;
+                    tabItemPublisher.Visibility = Visibility.Visible;
+                    tabItemGenre.Visibility = Visibility.Visible;
+                    tabItemAuth.Visibility = Visibility.Visible;
+                    tabItemLogs.Visibility = Visibility.Visible;
+                    logOutButton.IsEnabled = true;
+                    loginLabel.Content = currentAccount.Login;
+                    break;
+                case RoleType.USER:
+                    break;
+                case RoleType.GUEST:
+                    tabItemAuth.Visibility = Visibility.Visible;
+                    logOutButton.IsEnabled = false;
+                    loginLabel.Content = "guest";
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void LogIn()
+        {
+            using var db = new BookStoreContext();
+            var user = db.Accounts.FirstOrDefault(x => x.Login.ToLower() == loginText.Text.ToLower());
+
+            if (user is not null)
+            {
+                currentAccount = user;
+            }
+        }
+
+        private void LogOut()
+        {
+            currentAccount = new Account { RoleId = (int)RoleType.GUEST };
+        }
+
+
     }
 }

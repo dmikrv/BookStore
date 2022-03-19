@@ -17,4 +17,11 @@ namespace Book_Store.Entities
 
         public virtual ICollection<Account> Accounts { get; set; }
     }
+
+    public enum RoleType
+    {
+        ADMIN = 1,
+        USER,
+        GUEST
+    }
 }

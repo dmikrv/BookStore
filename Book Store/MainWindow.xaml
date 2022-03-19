@@ -10,7 +10,7 @@
         Title="{x:Static resx:MainWindowStrings.WindowTitle}" Height="670" Width="1000">
     <Grid>
         <TabControl x:Name="tabControl" SelectionChanged="tabControl_SelectionChanged">
-            <TabItem Header="{x:Static resx:MainWindowStrings.TabItemBooks}">
+            <TabItem x:Name="tabItemBooks" Header="{x:Static resx:MainWindowStrings.TabItemBooks}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="4*"/>
@@ -120,7 +120,7 @@
                     </StackPanel>
                 </Grid>
             </TabItem>
-            <TabItem Header="Discounts">
+            <TabItem x:Name="tabItemDiscounts" Header="Discounts">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="4*"/>
@@ -197,7 +197,7 @@
                     </StackPanel>
                 </Grid>
             </TabItem>
-            <TabItem Header="{x:Static resx:MainWindowStrings.TabItemAuthors}">
+            <TabItem x:Name="tabItemAuthors" Header="{x:Static resx:MainWindowStrings.TabItemAuthors}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="4*"/>
@@ -232,7 +232,7 @@
                     </StackPanel>
                 </Grid>
             </TabItem>
-            <TabItem Header="{x:Static resx:MainWindowStrings.TabItemPublisher}">
+            <TabItem x:Name="tabItemPublisher" Header="{x:Static resx:MainWindowStrings.TabItemPublisher}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="4*"/>
@@ -256,7 +256,7 @@
                     </StackPanel>
                 </Grid>
             </TabItem>
-            <TabItem Header="{x:Static resx:MainWindowStrings.TabItemGenre}">
+            <TabItem x:Name="tabItemGenre" Header="{x:Static resx:MainWindowStrings.TabItemGenre}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="4*"/>
@@ -280,7 +280,32 @@
                     </StackPanel>
                 </Grid>
             </TabItem>
-            <TabItem Header="{x:Static resx:MainWindowStrings.TabItemLogs}">
+            <TabItem x:Name="tabItemAuth" Header="Auth" IsSelected="True">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Margin="5,0,5,0">
+                        <DockPanel>
+                            <Label Content="You are authorized under the account" FontSize="14"/>
+                            <Label x:Name="loginLabel" Content="guest" FontWeight="Bold" FontSize="14"/>
+                            <Button x:Name="logOutButton" Content="Log out" Padding="10,0,10,0" Margin="5,0,0,0" Click="logOutButton_Click"/>
+                        </DockPanel>
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="Login:"/>
+                            <TextBox x:Name="loginText"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="Password:"/>
+                            <PasswordBox x:Name="passwordText"/>
+                        </StackPanel>
+
+                        <Button x:Name="logInButton" Content="Log in" Padding="1,4,1,4" Margin="0,15,0,4" Click="logInButton_Click"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="tabItemLogs" Header="{x:Static resx:MainWindowStrings.TabItemLogs}" >
                 <Grid>
                     <ListView x:Name="LogEntryList">
                         <ListView.View>
