@@ -7,7 +7,7 @@
         xmlns:resx="clr-namespace:Book_Store.Properties"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="{x:Static resx:MainWindowStrings.WindowTitle}" Height="670" Width="1000">
+        Title="{x:Static resx:MainWindowStrings.WindowTitle}" Height="850" Width="1200">
     <Grid>
         <TabControl x:Name="tabControl" SelectionChanged="tabControl_SelectionChanged">
             <TabItem x:Name="tabItemBooks" Header="{x:Static resx:MainWindowStrings.TabItemBooks}">
@@ -46,6 +46,14 @@
                     </Grid>
 
                     <StackPanel Grid.Column="1" Margin="5,0,5,0">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Name="imageViewer" Height="169" Width="110" />
+                            <StackPanel Orientation="Vertical" Margin="22,5,0,0" VerticalAlignment="Center">
+                                <Button x:Name="addCoverBookButton" Content="+" FontWeight="Bold" FontSize="25" Padding="10,5,10,5" Margin="0,0,0,10" Click="addCoverBookButton_Click"/>
+                                <Button x:Name="deleteCoverBookButton" Content="-" FontWeight="Bold" FontSize="25" Padding="10,5,10,5" Margin="0,0,0,10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Click="deleteCoverBookButton_Click"/>
+                            </StackPanel>
+                        </StackPanel>
+
                         <StackPanel Orientation="Vertical">
                             <Label Content="Name*:"/>
                             <TextBox x:Name="nameBookText"/>

@@ -10,7 +10,6 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Text.RegularExpressions;
@@ -18,6 +17,9 @@ using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 
 using Book_Store.Entities;
+using Book_Store.Extensions;
+using System.Windows.Media.Imaging;
+using Microsoft.Win32;
 
 namespace Book_Store
 {
@@ -27,6 +29,8 @@ namespace Book_Store
     public partial class MainWindow : Window
     {
         Account currentAccount;
+        private bool? _hasImageOfBook = null;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -93,7 +97,7 @@ namespace Book_Store
             using (var db = new BookStoreContext())
             {
                 IQueryable<Book> books = db.Books.Include(nameof(Author)).Include(nameof(Genre)).Include(nameof(Publisher))
-                    .Select(x => x);
+                    .Include(nameof(Entities.Image)).Select(x => x);
                 if (searchBookText.Text != string.Empty)
                 {
                     books = books.Where(x => x.Name.Contains(searchBookText.Text));
@@ -131,6 +135,9 @@ namespace Book_Store
                 deleteBookButton.IsEnabled = false;
                 changeBookButton.IsEnabled = false;
                 decommissionBookButton.IsEnabled = false;
+
+                imageViewer.Source = new BitmapImage().GetImage(Properties.DefaultBookCovers.default_book_cover);
+                _hasImageOfBook = false;
             }
         }
 
@@ -238,9 +245,11 @@ namespace Book_Store
                 genreComboBox.SelectedIndex = -1;
             }
 
-            // continuation and decommissioned books
+            // continuation and decommissioned books, image
             Book previousBook;
+            //Entities.Image image;
             bool isDecommissionedBook;
+
             using (var db = new BookStoreContext())
             {
                 previousBookComboBox.ItemsSource = (from x in db.Books
@@ -258,6 +267,10 @@ namespace Book_Store
                 isDecommissionedBook = (from x in db.DecommissionedBooks
                                         where x.BookId == book.Id
                                         select x).Count() > 0;
+
+                imageViewer.Source = new BitmapImage().GetImage(book.ImageId != null
+                    ? book.Image.ImageData : db.Images.First(x => x.ImageTitle == "default").ImageData);
+                _hasImageOfBook = book.ImageId != null;
             }
 
             if (previousBook is not null)
@@ -607,6 +620,8 @@ namespace Book_Store
                         YearPublishing = new DateTime(int.Parse(yearPublishingText.Text), 1, 1),
                         CostPrice = decimal.Parse(costPriceText.Text),
                         Price = decimal.Parse(priceText.Text),
+                        Image = _hasImageOfBook == true
+                            ? new Entities.Image { ImageData = (imageViewer.Source as BitmapImage).GetBytes() } : null
                     });
 
                     if (previousBookCheckBox.IsChecked == true)
@@ -647,6 +662,11 @@ namespace Book_Store
                     book.YearPublishing = new DateTime(int.Parse(yearPublishingText.Text), 1, 1);
                     book.CostPrice = decimal.Parse(costPriceText.Text);
                     book.Price = decimal.Parse(priceText.Text);
+
+                    if (_hasImageOfBook == true)
+                        book.Image = new Entities.Image { ImageData = (imageViewer.Source as BitmapImage).GetBytes() };
+                    else
+                        book.ImageId = null;
 
                     var continuationBook = (from x in db.ContinuationBooks where book.Id == x.BookId select x).FirstOrDefault();
                     if (previousBookCheckBox.IsChecked == true)
@@ -1001,5 +1021,33 @@ namespace Book_Store
             currentAccount = new Account { RoleId = (int)RoleType.GUEST };
             passwordText.Password = string.Empty;
         }
+
+        private void addCoverBookButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.InitialDirectory = "c:\\";
+            dlg.Filter = "Image files (*.jpg)|*.jpg|All Files (*.*)|*.*";
+            dlg.RestoreDirectory = true;
+
+            if (dlg.ShowDialog() == true)
+            {
+                string selectedFileName = dlg.FileName;
+                BitmapImage bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.UriSource = new Uri(selectedFileName);
+                bitmap.EndInit();
+
+                imageViewer.Source = bitmap;
+                _hasImageOfBook = true;
+            }
+
+        }
+
+        private void deleteCoverBookButton_Click(object sender, RoutedEventArgs e)
+        {
+            imageViewer.Source = new BitmapImage().GetImage(Properties.DefaultBookCovers.default_book_cover);
+            _hasImageOfBook = false;
+        }
+
     }
 }
