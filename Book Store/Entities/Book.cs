@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Book_Store.Extensions;
+using System;
 using System.Collections.Generic;
+using System.Windows.Media.Imaging;
 
 #nullable disable
 
@@ -33,6 +35,20 @@ namespace Book_Store.Entities
         public virtual ICollection<BookDiscount> BookDiscounts { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
 
+        [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+        public BitmapImage BitmapImage
+        {
+            get
+            {
+                if (ImageId != null)
+                    return new BitmapImage().GetImage(Image.ImageData);
+                else
+                    return new BitmapImage().GetImage(Properties.DefaultBookCovers.default_book_cover);
+            }
+        }
+
+        [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+        public bool IsBought { get; set; } = false;
         public override string ToString()
         {
             return Name;

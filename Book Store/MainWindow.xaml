@@ -10,6 +10,68 @@
         Title="{x:Static resx:MainWindowStrings.WindowTitle}" Height="850" Width="1200">
     <Grid>
         <TabControl x:Name="tabControl" SelectionChanged="tabControl_SelectionChanged">
+            <TabItem x:Name="tabItemShowcase" Header="Showcase">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <ScrollViewer>
+                        <ListView x:Name="showcaseListView" TabIndex="0" Focusable="True" HorizontalAlignment="Left"
+                              VerticalAlignment="Top" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto" Height="Auto" BorderThickness="0" SelectionMode="Single">
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid/>
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+
+                                    <DockPanel>
+                                        <Image DockPanel.Dock="Left" Margin="2" Source="{Binding BitmapImage}" Stretch="UniformToFill" Width="110" Height="169" />
+                                        <TextBlock DockPanel.Dock="Top" Margin="2" Text="{Binding Name}" TextWrapping="WrapWithOverflow"/>
+                                        <TextBlock DockPanel.Dock="Top" Margin="2,7,2,2" Text="{Binding Author}" TextWrapping="WrapWithOverflow"/>
+                                        <UniformGrid VerticalAlignment="Bottom" DockPanel.Dock="Bottom" Rows="1">
+                                            <TextBlock HorizontalAlignment="Left" Margin="2,7,2,2" Text="{Binding Price, StringFormat=\{0:0.00\}}" TextWrapping="WrapWithOverflow"/>
+                                            <TextBlock HorizontalAlignment="Right" Margin="2,2,2,2" Text="{local:SwitchBinding IsBought, in cart, _}" TextWrapping="WrapWithOverflow" FontWeight="Bold"/>
+                                        </UniformGrid>
+                                    </DockPanel>
+                                   
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </ScrollViewer>
+
+
+                    <StackPanel Grid.Column="1" Margin="5,0,5,0">
+
+                        <Button Padding="1,4,1,4" Margin="0,15,0,4" DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Content="Buy" Click="Button_Click_1"/>
+                        <!--<ListView Grid.Row="0" x:Name="showcaseListBooks" SelectionMode="Extended" Height="400">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="Auto"></GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>-->
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="First name:"/>
+                            <TextBox x:Name="guestFirstName" />
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="Last name:"/>
+                            <TextBox x:Name="guestLastName"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="Phone:"/>
+                            <TextBox x:Name="guestPhone"/>
+                        </StackPanel>
+                        <Button x:Name="makeOrederButton" Padding="1,4,1,4" Margin="0,15,0,4" DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Content="Make an order" Click="makeOrederButton_Click"/>
+
+                    </StackPanel>
+                </Grid>
+            </TabItem>
             <TabItem x:Name="tabItemBooks" Header="{x:Static resx:MainWindowStrings.TabItemBooks}">
                 <Grid>
                     <Grid.ColumnDefinitions>

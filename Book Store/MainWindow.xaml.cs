@@ -20,6 +20,7 @@ using Book_Store.Entities;
 using Book_Store.Extensions;
 using System.Windows.Media.Imaging;
 using Microsoft.Win32;
+using System.IO;
 
 namespace Book_Store
 {
@@ -76,8 +77,24 @@ namespace Book_Store
             {
                 UpdateDiscounts();
             }
+            else if (header == "Showcase")
+            {
+                UpdateShowcase();
+            }
 
         }
+        private void UpdateShowcase()
+        {
+            using var db = new BookStoreContext();
+
+            showcaseListView.ItemsSource = db.Books.Include(x => x.Author).Include(nameof(Genre)).Include(nameof(Publisher))
+                .Include(nameof(Entities.Image)).ToList();
+
+            guestFirstName.Text = string.Empty;
+            guestLastName.Text = string.Empty;
+            guestPhone.Text = string.Empty;
+        }
+
         private void UpdateAuthors()
         {
             using (var db = new BookStoreContext())
@@ -94,51 +111,54 @@ namespace Book_Store
 
         private void UpdateBooks()
         {
-            using (var db = new BookStoreContext())
+            using var db = new BookStoreContext();
+
+            var books = db.Books
+                .Include(nameof(Author))
+                .Include(nameof(Genre))
+                .Include(nameof(Publisher))
+                .Include(nameof(Entities.Image));
+
+            if (!string.IsNullOrEmpty(searchBookText.Text))
             {
-                IQueryable<Book> books = db.Books.Include(nameof(Author)).Include(nameof(Genre)).Include(nameof(Publisher))
-                    .Include(nameof(Entities.Image)).Select(x => x);
-                if (searchBookText.Text != string.Empty)
-                {
-                    books = books.Where(x => x.Name.Contains(searchBookText.Text));
-                }
-                if (showDecommissionBooksCheckBox.IsChecked == false)
-                {
-                    books = books.Where(x => !db.DecommissionedBooks.Select(x => x.BookId).Contains(x.Id));
-                }
-                listViewBooks.ItemsSource = books.OrderBy(x => x.Name).ToList();
-
-                nameBookText.Text = string.Empty;
-
-                authorComboBox.ItemsSource = db.Authors.ToList();
-                authorComboBox.SelectedIndex = 0;
-
-                publisherCheckBox.IsChecked = false;
-                publisherComboBox.IsEnabled = false;
-                publisherComboBox.ItemsSource = db.Publishers.ToList();
-                publisherComboBox.SelectedIndex = -1;
-
-                pagesBookText.Text = string.Empty;
-
-                genreCheckBox.IsChecked = false;
-                genreComboBox.IsEnabled = false;
-                genreComboBox.ItemsSource = db.Genres.ToList();
-                genreComboBox.SelectedIndex = -1;
-
-                yearPublishingText.Text = string.Empty;
-                costPriceText.Text = string.Empty;
-                priceText.Text = string.Empty;
-
-                previousBookCheckBox.IsChecked = false;
-                previousBookComboBox.ItemsSource = db.Books.ToList();
-
-                deleteBookButton.IsEnabled = false;
-                changeBookButton.IsEnabled = false;
-                decommissionBookButton.IsEnabled = false;
-
-                imageViewer.Source = new BitmapImage().GetImage(Properties.DefaultBookCovers.default_book_cover);
-                _hasImageOfBook = false;
+                books = books.Where(x => x.Name.Contains(searchBookText.Text));
             }
+            if (showDecommissionBooksCheckBox.IsChecked == false)
+            {
+                books = books.Where(x => !db.DecommissionedBooks.Select(x => x.BookId).Contains(x.Id));
+            }
+            listViewBooks.ItemsSource = books.OrderBy(x => x.Name).ToList();
+
+            nameBookText.Text = string.Empty;
+
+            authorComboBox.ItemsSource = db.Authors.ToList();
+            authorComboBox.SelectedIndex = 0;
+
+            publisherCheckBox.IsChecked = false;
+            publisherComboBox.IsEnabled = false;
+            publisherComboBox.ItemsSource = db.Publishers.ToList();
+            publisherComboBox.SelectedIndex = -1;
+
+            pagesBookText.Text = string.Empty;
+
+            genreCheckBox.IsChecked = false;
+            genreComboBox.IsEnabled = false;
+            genreComboBox.ItemsSource = db.Genres.ToList();
+            genreComboBox.SelectedIndex = -1;
+
+            yearPublishingText.Text = string.Empty;
+            costPriceText.Text = string.Empty;
+            priceText.Text = string.Empty;
+
+            previousBookCheckBox.IsChecked = false;
+            previousBookComboBox.ItemsSource = db.Books.ToList();
+
+            deleteBookButton.IsEnabled = false;
+            changeBookButton.IsEnabled = false;
+            decommissionBookButton.IsEnabled = false;
+
+            imageViewer.Source = new BitmapImage().GetImage(Properties.DefaultBookCovers.default_book_cover);
+            _hasImageOfBook = false;
         }
 
         private void UpdatePublishers()
@@ -185,10 +205,16 @@ namespace Book_Store
         {
             using (var db = new BookStoreContext())
             {
-                listViewDiscountsBooksNoIncluded.ItemsSource = db.Books.Include(nameof(Author))
-                    .Include(nameof(Genre)).Include(nameof(Publisher)).AsEnumerable()
-                    .Where(x => !listViewDiscountsBooksIncluded.Items.OfType<Book>().Select(x => x.Id).Contains(x.Id))
-                    .OrderBy(x => x.Name).ToList();
+                var included = listViewDiscountsBooksIncluded.Items.OfType<Book>().Select(x => x.Id).ToArray();
+
+                listViewDiscountsBooksNoIncluded.ItemsSource = db.Books
+                    .Include(nameof(Author))
+                    .Include(nameof(Genre))
+                    .Include(nameof(Publisher))
+                    .AsEnumerable()
+                    .Where(x => !included.Contains(x.Id))
+                    .OrderBy(x => x.Name)
+                    .ToList();
             }
         }
 
@@ -266,7 +292,7 @@ namespace Book_Store
 
                 isDecommissionedBook = (from x in db.DecommissionedBooks
                                         where x.BookId == book.Id
-                                        select x).Count() > 0;
+                                        select x).Any();
 
                 imageViewer.Source = new BitmapImage().GetImage(book.ImageId != null
                     ? book.Image.ImageData : db.Images.First(x => x.ImageTitle == "default").ImageData);
@@ -285,14 +311,7 @@ namespace Book_Store
             }
 
             decommissionBookButton.IsEnabled = true;
-            if (isDecommissionedBook)
-            {
-                decommissionBookButton.Content = "Return";
-            }
-            else
-            {
-                decommissionBookButton.Content = "Decommission";
-            }
+            decommissionBookButton.Content = isDecommissionedBook ? "Return" : "Decommission";
         }
 
         private void listViewPublisher_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -874,6 +893,29 @@ namespace Book_Store
             return true;
         }
 
+        private bool CheckTextBoxsOfMakeOrder()
+        {
+            if (guestFirstName.Text == string.Empty)
+            {
+                MessageBox.Show("first name is empty!", Properties.MainWindowStrings.WindowTitle,
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+            if (guestLastName.Text == string.Empty)
+            {
+                MessageBox.Show("last name is empty!", Properties.MainWindowStrings.WindowTitle,
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+            if (guestPhone.Text == string.Empty)
+            {
+                MessageBox.Show("phone is empty!", Properties.MainWindowStrings.WindowTitle,
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+
+            return true;
+        }
 
         // ---------------------------------------------------------------------------------------- //
 
@@ -994,6 +1036,7 @@ namespace Book_Store
                     break;
                 case RoleType.GUEST:
                     tabItemAuth.Visibility = Visibility.Visible;
+                    tabItemShowcase.Visibility = Visibility.Visible;
                     logOutButton.IsEnabled = false;
                     loginLabel.Content = "guest";
                     break;
@@ -1040,13 +1083,114 @@ namespace Book_Store
                 imageViewer.Source = bitmap;
                 _hasImageOfBook = true;
             }
-
         }
 
         private void deleteCoverBookButton_Click(object sender, RoutedEventArgs e)
         {
             imageViewer.Source = new BitmapImage().GetImage(Properties.DefaultBookCovers.default_book_cover);
             _hasImageOfBook = false;
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            var book = showcaseListView.SelectedItem as Book;
+            showcaseListView.Items.OfType<Book>().First(x => x.Id == book.Id).IsBought = true;
+            showcaseListView.Items.Refresh();
+        }
+
+        private void makeOrederButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!CheckTextBoxsOfMakeOrder())
+                return;
+
+            using (var db = new BookStoreContext())
+            {
+                try
+                {
+                    var customer = db.Customers.Add(new Customer { FirstName = guestFirstName.Text, LastName = guestLastName.Text, Phone = guestPhone.Text });
+                    foreach (var book in showcaseListView.Items.OfType<Book>().Where(x => x.IsBought).ToList())
+                    {
+                        db.Orders.Add(new Order { Customer = customer.Entity, BookId = book.Id });
+                    }
+
+                    db.SaveChanges();
+                    UpdateShowcase();
+                    MessageBox.Show("order is made!", Properties.MainWindowStrings.WindowTitle, MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString(), Properties.MainWindowStrings.WindowTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+
+
+        }
+    }
+
+    public class SwitchBindingExtension : Binding
+    {
+        public SwitchBindingExtension()
+        {
+            Initialize();
+        }
+
+        public SwitchBindingExtension(string path)
+            : base(path)
+        {
+            Initialize();
+        }
+
+        public SwitchBindingExtension(string path, object valueIfTrue, object valueIfFalse)
+            : base(path)
+        {
+            Initialize();
+            this.ValueIfTrue = valueIfTrue;
+            this.ValueIfFalse = valueIfFalse;
+        }
+
+        private void Initialize()
+        {
+            this.ValueIfTrue = Binding.DoNothing;
+            this.ValueIfFalse = Binding.DoNothing;
+            this.Converter = new SwitchConverter(this);
+        }
+
+        [System.Windows.Markup.ConstructorArgument("valueIfTrue")]
+        public object ValueIfTrue { get; set; }
+
+        [System.Windows.Markup.ConstructorArgument("valueIfFalse")]
+        public object ValueIfFalse { get; set; }
+
+        private class SwitchConverter : IValueConverter
+        {
+            public SwitchConverter(SwitchBindingExtension switchExtension)
+            {
+                _switch = switchExtension;
+            }
+
+            private SwitchBindingExtension _switch;
+
+            #region IValueConverter Members
+
+            public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+            {
+                try
+                {
+                    bool b = System.Convert.ToBoolean(value);
+                    return b ? _switch.ValueIfTrue : _switch.ValueIfFalse.ToString() == "_" ? "" : _switch.ValueIfFalse;
+                }
+                catch
+                {
+                    return DependencyProperty.UnsetValue;
+                }
+            }
+
+            public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+            {
+                return Binding.DoNothing;
+            }
+
+            #endregion
         }
 
     }

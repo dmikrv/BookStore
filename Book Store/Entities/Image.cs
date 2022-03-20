@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Media.Imaging;
+using Book_Store.Extensions;
 
 #nullable disable
 
