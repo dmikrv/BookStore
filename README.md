@@ -1,3 +1,5 @@
+*[English](README.md) ∙ [Русский](README-ru.md)* <!-- l10n:select -->
+
 # Book Store
 
 Exam project "Book Store" using .NET5, C#, WPF, MSSQL, EF Core, Logging and LINQ
