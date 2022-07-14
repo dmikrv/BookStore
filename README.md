@@ -4,31 +4,31 @@ Exam project "Book Store" using .NET5, C#, WPF, MSSQL, EF Core, Logging and LINQ
 
 ## Requirements / Features
 
-**Основная задача проекта**: учитывать текущий ассортимент книг в магазине.
+**The main objective of the project**: to take into account the current range of books in the store.
 
-* [x] Необходимо хранить следующую информацию о книгах: 
-    - название книги
-    - ФИО автора
-    - название издательства
-    - количество страниц
-    - жанр
-    - год издания
-    - себестоимость
-    - цена для продажи.
-* [x] Является ли книга продолжением какой-то другой книги (например, вторая часть дилогии).
-* [x] Приложение должно позволять: 
-    - добавлять книги
-    - удалять книги
-    - редактировать параметры книг
-    - продавать книги
-    - списывать книги
-    - вносить книги в акции (например, неделя книг новогодней тематики со скидкой 10%)
-    - откладывать книги для конкретного покупателя.
-* [x] Приложение должно предоставить функциональность по поиску книг по таким параметрам: 
-    - название книги
-    - автор
-    - жанр
-* [x] Необходимо предусмотреть возможность входа по логину и паролю.
+* [x] It is necessary to store the following information about books:
+    - name of the book
+    - Name of the author
+    - name of the publisher
+    - number of pages
+    - genre
+    - the year of publishing
+    - prime cost
+    - sale price.
+* [x] Whether the book is a continuation of some other book (for example, the second part of a dilogy).
+* [x] The application must allow:
+    - add books
+    - delete books
+    - edit book options
+    - sell books
+    - copy books
+    - contribute books to promotions (for example, a week of New Year-themed books with a 10% discount)
+    - set aside books for a specific buyer.
+* [x] The application must provide the functionality to search for books by the following parameters:
+    - name of the book
+    - author
+    - genre
+* [x] It is necessary to provide for the possibility of logging in with a login and password.
 
 ## Screenshots
 
