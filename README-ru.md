@@ -1,3 +1,5 @@
+*[English](README.md) ∙ [Русский](README-ru.md)* <!-- l10n:select -->
+
 # Book Store
 
 Экзаменационный проект "Книжный магазин"
