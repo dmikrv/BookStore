@@ -2,9 +2,7 @@
 
 # Book Store
 
-Exam project "Book Store" using .NET5, C#, WPF, MSSQL, EF Core, Logging and LINQ
-
-## Requirements / Features
+## Features
 
 **The main objective of the project**: to take into account the current range of books in the store.
 
